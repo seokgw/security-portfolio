@@ -24,6 +24,7 @@ const gameState = {
   clearEffectTimeoutId: null,
   clearEffectPlayed: false,
   gameRecorded: false,
+  pairCount: CARD_PAIR_COUNT,
   deck: [],
   stats: { ...DEFAULT_STATS }
 };
@@ -42,6 +43,7 @@ function initApp() {
 
 function cacheElements() {
   elements.board = document.querySelector("#game-board");
+  elements.difficultyButtons = document.querySelector("#difficulty-buttons");
   elements.gamePanel = document.querySelector(".game-panel");
   elements.timeLeft = document.querySelector("#time-left");
   elements.score = document.querySelector("#score");
@@ -64,6 +66,7 @@ function cacheElements() {
 
 function bindEvents() {
   elements.board.addEventListener("click", handleBoardClick);
+  elements.difficultyButtons.addEventListener("click", handleDifficultyChange);
   elements.pauseButton.addEventListener("click", toggleManualPause);
   elements.restartButton.addEventListener("click", restartGame);
   elements.resetStatsButton.addEventListener("click", resetStats);
@@ -96,14 +99,15 @@ function initGame() {
   elements.pauseButton.disabled = false;
   elements.pauseButton.textContent = "일시정지";
   elements.pauseOverlay.hidden = true;
-  elements.totalPairs.textContent = CARD_PAIR_COUNT;
+  elements.totalPairs.textContent = gameState.pairCount;
+  updateDifficultyButtons();
   renderCards();
   updateDisplay();
   startTimer();
 }
 
 function createDeck() {
-  const selectedIcons = CARD_ICONS.slice(0, CARD_PAIR_COUNT);
+  const selectedIcons = CARD_ICONS.slice(0, gameState.pairCount);
   return shuffleCards([...selectedIcons, ...selectedIcons].map((icon, index) => ({
     id: index,
     icon,
@@ -140,6 +144,21 @@ function handleBoardClick(event) {
   handleCardClick(Number(cardElement.dataset.index), cardElement);
 }
 
+function handleDifficultyChange(event) {
+  const button = event.target.closest("button[data-pairs]");
+  if (!button) return;
+  const nextPairCount = Number(button.dataset.pairs);
+  if (![6, 8].includes(nextPairCount) || nextPairCount === gameState.pairCount) return;
+  gameState.pairCount = nextPairCount;
+  initGame();
+}
+
+function updateDifficultyButtons() {
+  elements.difficultyButtons.querySelectorAll("button[data-pairs]").forEach((button) => {
+    button.setAttribute("aria-pressed", String(Number(button.dataset.pairs) === gameState.pairCount));
+  });
+}
+
 function handleCardClick(index, cardElement) {
   if (gameState.status !== "playing" || gameState.paused || gameState.inputLocked) return;
   const card = gameState.deck[index];
@@ -170,7 +189,7 @@ function checkMatch() {
     markMatchedCards();
     resetSelection();
     updateDisplay();
-    if (gameState.matchedPairs === CARD_PAIR_COUNT) finishGame("clear");
+    if (gameState.matchedPairs === gameState.pairCount) finishGame("clear");
     return;
   }
   gameState.compareTimeoutId = window.setTimeout(hideMismatchedCards, MISMATCH_DELAY);
@@ -278,7 +297,7 @@ function finishGame(result) {
     elements.result.className = "result time-over";
     elements.resultKicker.textContent = "30 SECONDS ENDED";
     elements.resultTitle.textContent = "TIME OVER";
-    elements.resultMessage.textContent = `찾은 카드: ${gameState.matchedPairs} / ${CARD_PAIR_COUNT} · 점수: ${gameState.score}`;
+    elements.resultMessage.textContent = `찾은 카드: ${gameState.matchedPairs} / ${gameState.pairCount} · 점수: ${gameState.score}`;
   }
   elements.result.hidden = false;
   updateDisplay();

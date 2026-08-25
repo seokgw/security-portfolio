@@ -35,6 +35,15 @@
     </section>
 
     <section class="game-panel" aria-label="게임 영역">
+      <div class="difficulty-bar" aria-label="카드 수 선택">
+        <span>난이도</span>
+        <div id="difficulty-buttons" class="difficulty-buttons">
+          <button type="button" data-pairs="6" aria-pressed="true">12장</button>
+          <button type="button" data-pairs="8" aria-pressed="false">16장</button>
+        </div>
+        <small>선택하면 새 게임이 시작됩니다.</small>
+      </div>
+
       <div class="live-status" aria-live="polite">
         <div class="metric time"><span>남은 시간</span><strong><b id="time-left">30</b>초</strong></div>
         <div class="metric"><span>점수</span><strong id="score">0</strong></div>

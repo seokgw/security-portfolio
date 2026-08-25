@@ -48,6 +48,13 @@ h1 span { color: var(--pink); }
 .stats-strip strong { color: var(--yellow); font-size: .85rem; }
 
 .game-panel { position: relative; padding: 18px; border: 1px solid var(--line); border-radius: 24px; background: var(--panel); box-shadow: var(--shadow); }
+.difficulty-bar { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; }
+.difficulty-bar > span { color: var(--muted); font-size: .72rem; font-weight: 900; letter-spacing: .08em; }
+.difficulty-bar small { color: var(--muted); font-size: .68rem; }
+.difficulty-buttons { display: flex; padding: 3px; border: 1px solid var(--line); border-radius: 10px; background: rgba(0,0,0,.16); }
+.difficulty-buttons button { min-height: 30px; padding: 0 14px; border: 0; border-radius: 7px; color: var(--muted); background: transparent; font-size: .76rem; font-weight: 900; cursor: pointer; }
+.difficulty-buttons button[aria-pressed="true"] { color: #17142d; background: var(--yellow); }
+.difficulty-buttons button:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
 .live-status { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
 .metric { min-width: 0; padding: 10px 13px; border-radius: 12px; background: rgba(255,255,255,.045); }
 .metric span { display: block; margin-bottom: 2px; color: var(--muted); font-size: .66rem; font-weight: 800; }
@@ -104,6 +111,8 @@ h1 span { color: var(--pink); }
   .hero { grid-template-columns: 1fr; gap: 18px; }
   .rules { padding: 14px 18px; }
   .live-status { grid-template-columns: repeat(2, 1fr); }
+  .difficulty-bar { flex-wrap: wrap; }
+  .difficulty-bar small { flex-basis: 100%; text-align: center; }
   .card { min-height: 78px; }
 }
 
@@ -116,6 +125,7 @@ h1 span { color: var(--pink); }
   .rules ol { line-height: 1.45; }
   .stats-strip { margin-bottom: 8px; }
   .game-panel { padding: 12px; }
+  .difficulty-bar { margin-bottom: 8px; }
   .live-status { margin-bottom: 10px; }
   .game-board { max-width: 600px; gap: 8px; }
   .card { min-height: 78px; }

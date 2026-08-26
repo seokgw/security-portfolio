@@ -61,6 +61,19 @@ export function updateTemplate(items, id, state, name, now = new Date().toISOStr
 
 export function deleteTemplate(items, id) { return items.filter(item => item.id !== id); }
 
+export function clampTextPosition({ desiredX, desiredY, blockWidth, blockHeight, canvasWidth, canvasHeight, align, margin }) {
+  let minX, maxX;
+  if (align === "left") { minX = margin; maxX = canvasWidth - margin - blockWidth; }
+  else if (align === "right") { minX = margin + blockWidth; maxX = canvasWidth - margin; }
+  else { minX = margin + blockWidth / 2; maxX = canvasWidth - margin - blockWidth / 2; }
+  if (maxX < minX) minX = maxX = canvasWidth / 2;
+  const minY = margin + blockHeight / 2, maxY = canvasHeight - margin - blockHeight / 2;
+  return {
+    x: Math.min(Math.max(desiredX, minX), maxX),
+    y: maxY < minY ? canvasHeight / 2 : Math.min(Math.max(desiredY, minY), maxY),
+  };
+}
+
 export function renderCanvas(ctx, state, width, height) {
   ctx.clearRect(0, 0, width, height);
   const gradient = ctx.createLinearGradient(0, 0, width, height);
@@ -78,8 +91,16 @@ export function renderCanvas(ctx, state, width, height) {
   ctx.textAlign = state.textAlign; ctx.textBaseline = "middle"; ctx.fillStyle = state.textColor;
   ctx.shadowColor = "rgba(0,0,0,.65)"; ctx.shadowBlur = 12 * scale; ctx.shadowOffsetY = 3 * scale;
   const maxWidth = width * .84, lines = wrapText(ctx, state.text, maxWidth), lineHeight = fontSize * 1.25;
-  const anchorX = width * state.textX / 100;
-  const centerY = height * state.textY / 100;
+  const blockWidth = Math.max(...lines.map(line => ctx.measureText(line).width), 0);
+  const blockHeight = Math.max(fontSize, lines.length * lineHeight);
+  const safe = clampTextPosition({
+    desiredX: width * state.textX / 100,
+    desiredY: height * state.textY / 100,
+    blockWidth, blockHeight, canvasWidth: width, canvasHeight: height,
+    align: state.textAlign, margin: width * .04,
+  });
+  const anchorX = safe.x;
+  const centerY = safe.y;
   const startY = centerY - ((lines.length - 1) * lineHeight) / 2;
   lines.forEach((line, index) => ctx.fillText(line, anchorX, startY + index * lineHeight, maxWidth));
   ctx.shadowColor = "transparent";

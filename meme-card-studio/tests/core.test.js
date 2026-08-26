@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { coverRect, wrapText, validateImageFile, validateImportedTemplates, createTemplate, updateTemplate, deleteTemplate, clampTextPosition } from "../core.js";
+import { coverRect, wrapText, validateImageFile, validateImportedTemplates, createTemplate, updateTemplate, deleteTemplate, clampTextPosition, fitTextLayout } from "../core.js";
 
 test("cover crop fills square, portrait and story targets", () => {
   for (const [w,h] of [[1080,1080],[1080,1350],[1080,1920]]) { const r=coverRect(1600,900,w,h); assert.ok(r.width>=w); assert.ok(r.height>=h); assert.equal(r.x,(w-r.width)/2); }
@@ -21,4 +21,13 @@ test("text block stays inside every canvas edge for each alignment", () => {
   assert.deepEqual(clampTextPosition({...common,desiredX:0,desiredY:0,align:"center"}),{x:343,y:163});
   assert.deepEqual(clampTextPosition({...common,desiredX:1080,desiredY:1080,align:"left"}),{x:437,y:917});
   assert.deepEqual(clampTextPosition({...common,desiredX:0,desiredY:540,align:"right"}),{x:643,y:540});
+});
+test("large multi-line text shrinks until its full height fits the canvas", () => {
+  const ctx={font:"",measureText(text){ const size=Number(this.font)||1; return {width:Array.from(text).length*size*.55}; }};
+  const setFont=size=>{ ctx.font=String(size); };
+  const layout=fitTextLayout(ctx,"첫째 줄\n둘째 줄\n셋째 줄\n넷째 줄",140,900,300,setFont);
+  assert.ok(layout.fontSize < 140);
+  assert.ok(layout.blockHeight <= 300);
+  const safe=clampTextPosition({desiredX:540,desiredY:1080,blockWidth:500,blockHeight:layout.blockHeight,canvasWidth:1080,canvasHeight:1080,align:"center",margin:43});
+  assert.ok(safe.y + layout.blockHeight / 2 <= 1080 - 43);
 });

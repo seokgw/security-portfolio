@@ -74,6 +74,22 @@ export function clampTextPosition({ desiredX, desiredY, blockWidth, blockHeight,
   };
 }
 
+export function fitTextLayout(ctx, text, requestedFontSize, maxWidth, maxHeight, setFont) {
+  let fontSize = requestedFontSize;
+  let lines = [];
+  let lineHeight = 0;
+  let blockHeight = 0;
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    setFont(fontSize);
+    lines = wrapText(ctx, text, maxWidth);
+    lineHeight = fontSize * 1.25;
+    blockHeight = lines.length ? fontSize + (lines.length - 1) * lineHeight : 0;
+    if (blockHeight <= maxHeight || fontSize <= 1) break;
+    fontSize = Math.max(1, fontSize * Math.min(.9, maxHeight / blockHeight));
+  }
+  return { fontSize, lines, lineHeight, blockHeight };
+}
+
 export function renderCanvas(ctx, state, width, height) {
   ctx.clearRect(0, 0, width, height);
   const gradient = ctx.createLinearGradient(0, 0, width, height);
@@ -86,18 +102,21 @@ export function renderCanvas(ctx, state, width, height) {
   }
   if (!state.text) return;
   const scale = width / 1080;
-  const fontSize = state.fontSize * scale;
-  ctx.font = `800 ${fontSize}px "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif`;
+  const requestedFontSize = state.fontSize * scale;
+  const setFont = size => { ctx.font = `800 ${size}px "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif`; };
+  setFont(requestedFontSize);
   ctx.textAlign = state.textAlign; ctx.textBaseline = "middle"; ctx.fillStyle = state.textColor;
   ctx.shadowColor = "rgba(0,0,0,.65)"; ctx.shadowBlur = 12 * scale; ctx.shadowOffsetY = 3 * scale;
-  const maxWidth = width * .84, lines = wrapText(ctx, state.text, maxWidth), lineHeight = fontSize * 1.25;
+  const margin = width * .04;
+  const maxWidth = width - margin * 2;
+  const layout = fitTextLayout(ctx, state.text, requestedFontSize, maxWidth, height - margin * 2, setFont);
+  const { fontSize, lines, lineHeight, blockHeight } = layout;
   const blockWidth = Math.max(...lines.map(line => ctx.measureText(line).width), 0);
-  const blockHeight = Math.max(fontSize, lines.length * lineHeight);
   const safe = clampTextPosition({
     desiredX: width * state.textX / 100,
     desiredY: height * state.textY / 100,
     blockWidth, blockHeight, canvasWidth: width, canvasHeight: height,
-    align: state.textAlign, margin: width * .04,
+    align: state.textAlign, margin,
   });
   const anchorX = safe.x;
   const centerY = safe.y;

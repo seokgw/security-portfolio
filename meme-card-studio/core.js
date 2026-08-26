@@ -61,13 +61,15 @@ export function updateTemplate(items, id, state, name, now = new Date().toISOStr
 
 export function deleteTemplate(items, id) { return items.filter(item => item.id !== id); }
 
-export function clampTextPosition({ desiredX, desiredY, blockWidth, blockHeight, canvasWidth, canvasHeight, align, margin }) {
+export function clampTextPosition({ desiredX, desiredY, blockWidth, blockHeight, topExtent, bottomExtent, canvasWidth, canvasHeight, align, margin }) {
   let minX, maxX;
   if (align === "left") { minX = margin; maxX = canvasWidth - margin - blockWidth; }
   else if (align === "right") { minX = margin + blockWidth; maxX = canvasWidth - margin; }
   else { minX = margin + blockWidth / 2; maxX = canvasWidth - margin - blockWidth / 2; }
   if (maxX < minX) minX = maxX = canvasWidth / 2;
-  const minY = margin + blockHeight / 2, maxY = canvasHeight - margin - blockHeight / 2;
+  const above = topExtent ?? blockHeight / 2;
+  const below = bottomExtent ?? blockHeight / 2;
+  const minY = margin + above, maxY = canvasHeight - margin - below;
   return {
     x: Math.min(Math.max(desiredX, minX), maxX),
     y: maxY < minY ? canvasHeight / 2 : Math.min(Math.max(desiredY, minY), maxY),
@@ -79,15 +81,23 @@ export function fitTextLayout(ctx, text, requestedFontSize, maxWidth, maxHeight,
   let lines = [];
   let lineHeight = 0;
   let blockHeight = 0;
+  let topExtent = 0;
+  let bottomExtent = 0;
   for (let attempt = 0; attempt < 40; attempt += 1) {
     setFont(fontSize);
     lines = wrapText(ctx, text, maxWidth);
     lineHeight = fontSize * 1.25;
-    blockHeight = lines.length ? fontSize + (lines.length - 1) * lineHeight : 0;
+    const firstMetrics = ctx.measureText(lines[0] || "가");
+    const lastMetrics = ctx.measureText(lines.at(-1) || "가");
+    const ascent = firstMetrics.actualBoundingBoxAscent ?? fontSize * .8;
+    const descent = lastMetrics.actualBoundingBoxDescent ?? fontSize * .25;
+    topExtent = lines.length ? (lines.length - 1) * lineHeight / 2 + ascent : 0;
+    bottomExtent = lines.length ? (lines.length - 1) * lineHeight / 2 + descent : 0;
+    blockHeight = topExtent + bottomExtent;
     if (blockHeight <= maxHeight || fontSize <= 1) break;
     fontSize = Math.max(1, fontSize * Math.min(.9, maxHeight / blockHeight));
   }
-  return { fontSize, lines, lineHeight, blockHeight };
+  return { fontSize, lines, lineHeight, blockHeight, topExtent, bottomExtent };
 }
 
 export function renderCanvas(ctx, state, width, height) {
@@ -110,12 +120,12 @@ export function renderCanvas(ctx, state, width, height) {
   const margin = width * .04;
   const maxWidth = width - margin * 2;
   const layout = fitTextLayout(ctx, state.text, requestedFontSize, maxWidth, height - margin * 2, setFont);
-  const { fontSize, lines, lineHeight, blockHeight } = layout;
+  const { fontSize, lines, lineHeight, blockHeight, topExtent, bottomExtent } = layout;
   const blockWidth = Math.max(...lines.map(line => ctx.measureText(line).width), 0);
   const safe = clampTextPosition({
     desiredX: width * state.textX / 100,
     desiredY: height * state.textY / 100,
-    blockWidth, blockHeight, canvasWidth: width, canvasHeight: height,
+    blockWidth, blockHeight, topExtent, bottomExtent, canvasWidth: width, canvasHeight: height,
     align: state.textAlign, margin,
   });
   const anchorX = safe.x;

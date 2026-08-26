@@ -23,11 +23,16 @@ test("text block stays inside every canvas edge for each alignment", () => {
   assert.deepEqual(clampTextPosition({...common,desiredX:0,desiredY:540,align:"right"}),{x:643,y:540});
 });
 test("large multi-line text shrinks until its full height fits the canvas", () => {
-  const ctx={font:"",measureText(text){ const size=Number(this.font)||1; return {width:Array.from(text).length*size*.55}; }};
+  const ctx={font:"",measureText(text){ const size=Number(this.font)||1; return {width:Array.from(text).length*size*.55,actualBoundingBoxAscent:size*.82,actualBoundingBoxDescent:size*.32}; }};
   const setFont=size=>{ ctx.font=String(size); };
   const layout=fitTextLayout(ctx,"첫째 줄\n둘째 줄\n셋째 줄\n넷째 줄",140,900,300,setFont);
   assert.ok(layout.fontSize < 140);
   assert.ok(layout.blockHeight <= 300);
-  const safe=clampTextPosition({desiredX:540,desiredY:1080,blockWidth:500,blockHeight:layout.blockHeight,canvasWidth:1080,canvasHeight:1080,align:"center",margin:43});
-  assert.ok(safe.y + layout.blockHeight / 2 <= 1080 - 43);
+  const safe=clampTextPosition({desiredX:540,desiredY:1080,blockWidth:500,blockHeight:layout.blockHeight,topExtent:layout.topExtent,bottomExtent:layout.bottomExtent,canvasWidth:1080,canvasHeight:1080,align:"center",margin:43});
+  assert.ok(safe.y + layout.bottomExtent <= 1080 - 43);
+});
+test("glyph descent such as stars remains above the bottom safe margin", () => {
+  const safe=clampTextPosition({desiredX:540,desiredY:1080,blockWidth:700,blockHeight:180,topExtent:110,bottomExtent:70,canvasWidth:1080,canvasHeight:1080,align:"center",margin:43});
+  assert.equal(safe.y,967);
+  assert.equal(safe.y+70,1037);
 });

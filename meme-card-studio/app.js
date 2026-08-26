@@ -1,4 +1,4 @@
-import { RATIOS, validateImageFile, validateImportedTemplates, createTemplate, updateTemplate, deleteTemplate, renderCanvas } from "./core.js?v=6";
+import { RATIOS, validateImageFile, validateImportedTemplates, createTemplate, updateTemplate, deleteTemplate, renderCanvas } from "./core.js?v=7";
 
 const $ = id => document.getElementById(id);
 const canvas = $("preview"), ctx = canvas.getContext("2d");

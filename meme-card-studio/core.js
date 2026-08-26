@@ -102,6 +102,13 @@ export function fitTextLayout(ctx, text, requestedFontSize, maxWidth, maxHeight,
   return { fontSize, lines, lineHeight, blockHeight, topExtent, bottomExtent };
 }
 
+export function calculateTextStartY({ percent, lineCount, lineHeight, ascent, descent, canvasHeight, margin }) {
+  const minStartY = margin + ascent;
+  const maxStartY = canvasHeight - margin - descent - Math.max(0, lineCount - 1) * lineHeight;
+  if (maxStartY <= minStartY) return minStartY;
+  return minStartY + (maxStartY - minStartY) * Math.min(Math.max(percent, 0), 100) / 100;
+}
+
 export function renderCanvas(ctx, state, width, height) {
   ctx.clearRect(0, 0, width, height);
   const gradient = ctx.createLinearGradient(0, 0, width, height);
@@ -133,16 +140,13 @@ export function renderCanvas(ctx, state, width, height) {
     align: state.textAlign, margin,
   });
   const anchorX = safe.x;
-  const requestedStartY = safe.y - ((lines.length - 1) * lineHeight) / 2;
-  // 마지막 줄 기준선을 하단에서 역산하는 최종 안전장치. 브라우저/폰트별
-  // TextMetrics 편차가 있어도 모든 줄의 기준선이 Canvas 내부에 남는다.
+  // Y=0은 첫 줄을 상단 안전선에, Y=100은 마지막 줄을 하단 안전선에
+  // 직접 고정한다. 줄 수와 자동 줄바꿈 결과에 관계없이 같은 공식이다.
   const firstMetrics = ctx.measureText(lines[0] || "가");
   const lastMetrics = ctx.measureText(lines.at(-1) || "가");
   const safeAscent = Math.max(firstMetrics.actualBoundingBoxAscent || 0, fontSize * .9);
   const safeDescent = Math.max(lastMetrics.actualBoundingBoxDescent || 0, fontSize * .35);
-  const minStartY = margin + safeAscent;
-  const maxStartY = height - margin - safeDescent - (lines.length - 1) * lineHeight;
-  const startY = maxStartY < minStartY ? minStartY : Math.min(Math.max(requestedStartY, minStartY), maxStartY);
+  const startY = calculateTextStartY({ percent: state.textY, lineCount: lines.length, lineHeight, ascent: safeAscent, descent: safeDescent, canvasHeight: height, margin });
   lines.forEach((line, index) => ctx.fillText(line, anchorX, startY + index * lineHeight, maxWidth));
   ctx.shadowColor = "transparent";
 }

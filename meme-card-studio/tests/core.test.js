@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { coverRect, wrapText, validateImageFile, validateImportedTemplates, createTemplate, updateTemplate, deleteTemplate, clampTextPosition, fitTextLayout } from "../core.js";
+import { coverRect, wrapText, validateImageFile, validateImportedTemplates, createTemplate, updateTemplate, deleteTemplate, clampTextPosition, fitTextLayout, calculateTextStartY } from "../core.js";
 
 test("cover crop fills square, portrait and story targets", () => {
   for (const [w,h] of [[1080,1080],[1080,1350],[1080,1920]]) { const r=coverRect(1600,900,w,h); assert.ok(r.width>=w); assert.ok(r.height>=h); assert.equal(r.x,(w-r.width)/2); }
@@ -52,4 +52,19 @@ test("zero font metrics use conservative Korean glyph fallback bounds", () => {
   assert.ok(layout.bottomExtent >= 64*.35+40);
   const lastBaseline=1080-43-Math.max(0,layout.fontSize*.35);
   assert.ok(lastBaseline+layout.fontSize*.35<=1080-43);
+});
+test("Y 100 anchors the last line above the bottom for 2 and 5 lines", () => {
+  for (const lineCount of [2,5]) {
+    const startY=calculateTextStartY({percent:100,lineCount,lineHeight:80,ascent:58,descent:23,canvasHeight:1080,margin:43});
+    const lastBottom=startY+(lineCount-1)*80+23;
+    assert.equal(lastBottom,1037);
+  }
+});
+test("Y 0 anchors first line below top and Y 50 interpolates", () => {
+  const args={lineCount:3,lineHeight:80,ascent:58,descent:23,canvasHeight:1080,margin:43};
+  const top=calculateTextStartY({...args,percent:0});
+  const middle=calculateTextStartY({...args,percent:50});
+  const bottom=calculateTextStartY({...args,percent:100});
+  assert.equal(top,101);
+  assert.equal(middle,(top+bottom)/2);
 });

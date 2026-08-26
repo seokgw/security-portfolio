@@ -36,3 +36,11 @@ test("glyph descent such as stars remains above the bottom safe margin", () => {
   assert.equal(safe.y,967);
   assert.equal(safe.y+70,1037);
 });
+test("alphabetic baseline bounds map the last rendered baseline inside canvas", () => {
+  const lineHeight=175, lineCount=5, ascent=112, descent=38, margin=43, height=1080;
+  const topExtent=(lineCount-1)*lineHeight/2+ascent;
+  const bottomExtent=(lineCount-1)*lineHeight/2+descent;
+  const safe=clampTextPosition({desiredX:540,desiredY:height,blockWidth:800,blockHeight:topExtent+bottomExtent,topExtent,bottomExtent,canvasWidth:1080,canvasHeight:height,align:"center",margin});
+  const lastAlphabeticBaseline=safe.y+(lineCount-1)*lineHeight/2;
+  assert.equal(lastAlphabeticBaseline+descent,height-margin);
+});

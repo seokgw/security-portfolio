@@ -115,7 +115,9 @@ export function renderCanvas(ctx, state, width, height) {
   const requestedFontSize = state.fontSize * scale;
   const setFont = size => { ctx.font = `800 ${size}px "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif`; };
   setFont(requestedFontSize);
-  ctx.textAlign = state.textAlign; ctx.textBaseline = "middle"; ctx.fillStyle = state.textColor;
+  // TextMetrics의 ascent/descent는 alphabetic 기준선 기준이므로 실제 그리기도
+  // 같은 기준선을 사용해야 위·아래 안전 좌표가 정확히 일치한다.
+  ctx.textAlign = state.textAlign; ctx.textBaseline = "alphabetic"; ctx.fillStyle = state.textColor;
   ctx.shadowColor = "rgba(0,0,0,.65)"; ctx.shadowBlur = 12 * scale; ctx.shadowOffsetY = 3 * scale;
   const margin = width * .04;
   const maxWidth = width - margin * 2;

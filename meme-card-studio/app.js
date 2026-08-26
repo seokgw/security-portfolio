@@ -1,4 +1,4 @@
-import { RATIOS, validateImageFile, validateImportedTemplates, createTemplate, updateTemplate, deleteTemplate, renderCanvas } from "./core.js?v=7";
+import { RATIOS, validateImageFile, validateImportedTemplates, createTemplate, updateTemplate, deleteTemplate, renderCanvas, containSize } from "./core.js?v=8";
 
 const $ = id => document.getElementById(id);
 const canvas = $("preview"), ctx = canvas.getContext("2d");
@@ -11,7 +11,14 @@ function loadTemplates() { try { const value = JSON.parse(localStorage.getItem(S
 function persist() { localStorage.setItem(STORAGE_KEY, JSON.stringify(templates)); renderTemplates(); }
 function render() {
   const [width, height] = RATIOS[state.ratio]; canvas.width = width; canvas.height = height;
-  renderCanvas(ctx, state, width, height); $("ratioBadge").textContent = state.ratio;
+  renderCanvas(ctx, state, width, height); fitPreviewCanvas(); $("ratioBadge").textContent = state.ratio;
+}
+function fitPreviewCanvas() {
+  const wrap = canvas.parentElement, styles = getComputedStyle(wrap);
+  const availableWidth = wrap.clientWidth - parseFloat(styles.paddingLeft) - parseFloat(styles.paddingRight);
+  const availableHeight = wrap.clientHeight - parseFloat(styles.paddingTop) - parseFloat(styles.paddingBottom);
+  const fitted = containSize(availableWidth, availableHeight, canvas.width, canvas.height);
+  canvas.style.width = `${fitted.width}px`; canvas.style.height = `${fitted.height}px`;
 }
 function syncControls() {
   $("textInput").value = state.text; $("textX").value = state.textX; $("textY").value = state.textY;
@@ -61,4 +68,5 @@ $("saveTemplate").addEventListener("click", () => { const name = $("templateName
 $("exportJson").addEventListener("click", () => { const blob = new Blob([JSON.stringify({ version: 1, templates }, null, 2)], { type: "application/json" }), url = URL.createObjectURL(blob), a = document.createElement("a"); a.href = url; a.download = "meme-card-templates.json"; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); message("템플릿 JSON을 내보냈습니다."); });
 $("importJson").addEventListener("change", async e => { const file = e.target.files[0]; e.target.value = ""; if (!file) return; try { const parsed = JSON.parse(await file.text()), result = validateImportedTemplates(parsed); if (!result.ok) return message(result.error, "error"); templates = result.templates; persist(); message(`${templates.length}개 템플릿을 가져왔습니다.`); } catch { message("JSON 문법이 올바르지 않습니다. 기존 템플릿은 유지됩니다.", "error"); } });
 
+new ResizeObserver(fitPreviewCanvas).observe(canvas.parentElement);
 syncControls(); renderTemplates();

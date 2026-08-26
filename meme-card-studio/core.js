@@ -1,6 +1,12 @@
 export const RATIOS = { "1:1": [1080, 1080], "4:5": [1080, 1350], "9:16": [1080, 1920] };
 export const ALLOWED_IMAGE_TYPES = new Set(["image/png", "image/jpeg"]);
 
+export function containSize(contentWidth, contentHeight, intrinsicWidth, intrinsicHeight) {
+  if (contentWidth <= 0 || contentHeight <= 0 || intrinsicWidth <= 0 || intrinsicHeight <= 0) return { width: 0, height: 0 };
+  const scale = Math.min(contentWidth / intrinsicWidth, contentHeight / intrinsicHeight);
+  return { width: intrinsicWidth * scale, height: intrinsicHeight * scale };
+}
+
 export function coverRect(imageWidth, imageHeight, targetWidth, targetHeight) {
   const scale = Math.max(targetWidth / imageWidth, targetHeight / imageHeight);
   const width = imageWidth * scale, height = imageHeight * scale;

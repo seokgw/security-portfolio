@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { coverRect, wrapText, validateImageFile, validateImportedTemplates, createTemplate, updateTemplate, deleteTemplate, clampTextPosition, fitTextLayout, calculateTextStartY } from "../core.js";
+import { coverRect, wrapText, validateImageFile, validateImportedTemplates, createTemplate, updateTemplate, deleteTemplate, clampTextPosition, fitTextLayout, calculateTextStartY, containSize } from "../core.js";
 
 test("cover crop fills square, portrait and story targets", () => {
   for (const [w,h] of [[1080,1080],[1080,1350],[1080,1920]]) { const r=coverRect(1600,900,w,h); assert.ok(r.width>=w); assert.ok(r.height>=h); assert.equal(r.x,(w-r.width)/2); }
@@ -67,4 +67,11 @@ test("Y 0 anchors first line below top and Y 50 interpolates", () => {
   const bottom=calculateTextStartY({...args,percent:100});
   assert.equal(top,101);
   assert.equal(middle,(top+bottom)/2);
+});
+test("preview contain sizing preserves ratio without overflowing its box", () => {
+  assert.deepEqual(containSize(640,534,1080,1080),{width:534,height:534});
+  assert.deepEqual(containSize(640,534,1080,1350),{width:427.2,height:534});
+  const story=containSize(300,500,1080,1920);
+  assert.equal(story.width,281.25);
+  assert.ok(Math.abs(story.height-500)<1e-9);
 });

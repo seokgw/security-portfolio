@@ -1,0 +1,6 @@
+/* Canvas 표시 크기는 app.js가 박스의 실제 가용 폭·높이에 맞춰 계산한다. */
+.canvas-wrap canvas {
+  display: block;
+  max-width: none;
+  max-height: none;
+}

@@ -44,3 +44,12 @@ test("alphabetic baseline bounds map the last rendered baseline inside canvas", 
   const lastAlphabeticBaseline=safe.y+(lineCount-1)*lineHeight/2;
   assert.equal(lastAlphabeticBaseline+descent,height-margin);
 });
+test("zero font metrics use conservative Korean glyph fallback bounds", () => {
+  const ctx={font:"",measureText(text){ const size=Number(this.font)||1; return {width:Array.from(text).length*size*.55,actualBoundingBoxAscent:0,actualBoundingBoxDescent:0}; }};
+  const setFont=size=>{ ctx.font=String(size); };
+  const layout=fitTextLayout(ctx,"오늘도 한 걸음,\n나답게.",64,900,994,setFont);
+  assert.ok(layout.topExtent >= 64*.9+40);
+  assert.ok(layout.bottomExtent >= 64*.35+40);
+  const lastBaseline=1080-43-Math.max(0,layout.fontSize*.35);
+  assert.ok(lastBaseline+layout.fontSize*.35<=1080-43);
+});

@@ -89,8 +89,10 @@ export function fitTextLayout(ctx, text, requestedFontSize, maxWidth, maxHeight,
     lineHeight = fontSize * 1.25;
     const firstMetrics = ctx.measureText(lines[0] || "가");
     const lastMetrics = ctx.measureText(lines.at(-1) || "가");
-    const ascent = firstMetrics.actualBoundingBoxAscent ?? fontSize * .8;
-    const descent = lastMetrics.actualBoundingBoxDescent ?? fontSize * .25;
+    // 일부 Windows 한글/이모지 fallback 폰트는 실제 glyph가 있어도 0에 가까운
+    // bounding 값을 반환한다. 측정값과 보수적인 글자 크기 비율 중 큰 값을 쓴다.
+    const ascent = Math.max(firstMetrics.actualBoundingBoxAscent || 0, fontSize * .9);
+    const descent = Math.max(lastMetrics.actualBoundingBoxDescent || 0, fontSize * .35);
     topExtent = lines.length ? (lines.length - 1) * lineHeight / 2 + ascent : 0;
     bottomExtent = lines.length ? (lines.length - 1) * lineHeight / 2 + descent : 0;
     blockHeight = topExtent + bottomExtent;
@@ -131,8 +133,16 @@ export function renderCanvas(ctx, state, width, height) {
     align: state.textAlign, margin,
   });
   const anchorX = safe.x;
-  const centerY = safe.y;
-  const startY = centerY - ((lines.length - 1) * lineHeight) / 2;
+  const requestedStartY = safe.y - ((lines.length - 1) * lineHeight) / 2;
+  // 마지막 줄 기준선을 하단에서 역산하는 최종 안전장치. 브라우저/폰트별
+  // TextMetrics 편차가 있어도 모든 줄의 기준선이 Canvas 내부에 남는다.
+  const firstMetrics = ctx.measureText(lines[0] || "가");
+  const lastMetrics = ctx.measureText(lines.at(-1) || "가");
+  const safeAscent = Math.max(firstMetrics.actualBoundingBoxAscent || 0, fontSize * .9);
+  const safeDescent = Math.max(lastMetrics.actualBoundingBoxDescent || 0, fontSize * .35);
+  const minStartY = margin + safeAscent;
+  const maxStartY = height - margin - safeDescent - (lines.length - 1) * lineHeight;
+  const startY = maxStartY < minStartY ? minStartY : Math.min(Math.max(requestedStartY, minStartY), maxStartY);
   lines.forEach((line, index) => ctx.fillText(line, anchorX, startY + index * lineHeight, maxWidth));
   ctx.shadowColor = "transparent";
 }

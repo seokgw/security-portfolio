@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "templates": [
+    {"id":"aegis-square-qa","name":"AEGIS QA 정사각형","ratio":"1:1","text":"AEGIS TEAM\n안전한 연결의 시작","textX":50,"textY":78,"fontSize":58,"textColor":"#ffffff","textAlign":"center","createdAt":"2026-08-26T00:00:00.000Z","updatedAt":"2026-08-26T00:00:00.000Z"},
+    {"id":"aegis-feed-qa","name":"AEGIS QA 피드","ratio":"4:5","text":"기술로 지키고\n신뢰로 연결합니다","textX":50,"textY":76,"fontSize":60,"textColor":"#d9f3ff","textAlign":"center","createdAt":"2026-08-26T00:00:00.000Z","updatedAt":"2026-08-26T00:00:00.000Z"},
+    {"id":"aegis-story-qa","name":"AEGIS QA 스토리","ratio":"9:16","text":"SECURE TODAY\nREADY FOR TOMORROW 🔒","textX":50,"textY":80,"fontSize":56,"textColor":"#71cfff","textAlign":"center","createdAt":"2026-08-26T00:00:00.000Z","updatedAt":"2026-08-26T00:00:00.000Z"}
+  ]
+}

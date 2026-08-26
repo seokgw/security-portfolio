@@ -4,7 +4,7 @@
 
 | 기준 | 판정 | 근거 |
 |---|:---:|---|
-| T03-C01 | 확인 예정 | push 후 GitHub Pages 공개 URL 검사 |
+| T03-C01 | PASS | GitHub Pages 앱·JS·CSS와 공개 GitHub 소스 URL 모두 무인증 HTTP 200 |
 | T03-C03 | PASS | 첫 화면 편집 패널 |
 | T03-C04 | 확인하지 못함 | PNG 허용 로직 자동 테스트 통과, 실제 클릭 미확인 |
 | T03-C05 | 확인하지 못함 | JPEG 허용 코드 존재, 실제 클릭 미확인 |

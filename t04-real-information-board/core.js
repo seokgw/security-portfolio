@@ -6,6 +6,12 @@ const ERROR_CODES = ['timeout','auth','rate_limit','offline','schema_error'];
 
 function clone(value) { return JSON.parse(JSON.stringify(value)); }
 
+function roundTo(value, places=2) {
+  if (!Number.isFinite(value)) throw new TypeError('value must be finite');
+  const rounded = Number(value.toFixed(places));
+  return Object.is(rounded, -0) ? 0 : rounded;
+}
+
 function kstDate(iso) {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) throw new TypeError('유효한 ISO 시각이 필요합니다.');
@@ -36,7 +42,7 @@ function compare(rows, current) {
   const previous = rows.filter(r => r.signal_id === current.signal_id && r.record_date < current.record_date).sort((a,b) => b.record_date.localeCompare(a.record_date))[0];
   if (!previous) return {state:'insufficient',signed_delta:null,unit:null};
   if (previous.unit !== current.unit) return {state:'unit_mismatch',signed_delta:null,unit:null};
-  return {state:'comparable',signed_delta:current.normalized_value - previous.normalized_value,unit:current.unit};
+  return {state:'comparable',signed_delta:roundTo(current.normalized_value - previous.normalized_value,2),unit:current.unit};
 }
 
 function applySuccess(input, reading, meta={}) {
@@ -74,6 +80,6 @@ function runFixture(state, fixture) {
   return applyError(state,'schema_error',meta);
 }
 
-const api = {TIMEZONE,ERROR_CODES,kstDate,validateReading,emptyState,applySuccess,applyError,runFixture};
+const api = {TIMEZONE,ERROR_CODES,roundTo,kstDate,validateReading,emptyState,applySuccess,applyError,runFixture};
 if (typeof module !== 'undefined') module.exports = api;
 if (typeof window !== 'undefined') window.T04Core = api;

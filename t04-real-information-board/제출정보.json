@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "과정영수증": [
+    {
+      "kind": "t04_day",
+      "server_created_at": "2026-08-27T00:59:55.946Z",
+      "payload": {
+        "source_url": "https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current=temperature_2m&timezone=Asia%2FSeoul",
+        "source_observed_at": "2026-08-27T00:45:00.000Z",
+        "normalized_value": 26.2,
+        "unit": "°C"
+      }
+    }
+  ],
+  "note": "첫 실제 KST 날짜 기록만 존재합니다. 실제 다음 날짜 조회 전까지 정확히 2건 조건은 NOT YET입니다."
+}

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="서울 현재 기온을 매일 기록하고 외부 데이터 장애를 정직하게 보여주는 공개 정보판">
+  <title>오늘의 진짜 정보판 — 서울 기온</title>
+  <link rel="stylesheet" href="styles.css"><script src="core.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">본문으로 바로가기</a>
+  <header><div><p class="eyebrow">REAL SIGNAL / SEOUL</p><h1>오늘의 진짜 정보판</h1><p>데이터가 오지 않을 때도, 마지막으로 확인한 사실은 지우지 않습니다.</p></div><div class="clock"><span>기준 시간대</span><strong>Asia/Seoul</strong><time id="kst-clock">—</time></div></header>
+  <main id="main">
+    <section class="hero-grid" aria-label="실제 데이터 현황">
+      <article class="card current">
+        <div class="card-head"><div><p class="label">서울 현재 기온</p><h2>현재 실제 정보</h2></div><span id="live-badge" class="badge neutral">조회 전</span></div>
+        <div class="reading"><strong id="live-value">—</strong><span id="live-unit">°C</span></div>
+        <p id="live-note" class="note">공개 원천에서 최신 값을 조회하세요.</p>
+        <dl class="meta"><div><dt>출처</dt><dd><a id="live-source" href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a></dd></div><div><dt>출처 시각</dt><dd id="live-source-time">—</dd></div><div><dt>조회 시각</dt><dd id="live-fetched-time">—</dd></div><div><dt>기준 시간대</dt><dd>Asia/Seoul</dd></div></dl>
+        <button id="fetch-live" class="primary">실제 값 조회</button>
+      </article>
+      <article class="card delta"><p class="label">PRESERVED DAILY DATA</p><h2>어제 대비</h2><div id="delta-value" class="delta-value">비교 대기</div><p id="delta-formula">서로 다른 실제 KST 날짜 기록 2건이 필요합니다.</p><div class="count"><span>보존된 실제 일별 기록</span><strong id="live-count">0 / 정확히 2건 필요</strong></div></article>
+    </section>
+
+    <section class="card records"><div class="section-head"><div><p class="label">LIVE STORAGE</p><h2>실제 일별 기록</h2></div><p>같은 <code>signal_id + KST 날짜</code>는 한 행으로 갱신됩니다.</p></div><div class="table-wrap"><table><thead><tr><th>KST 날짜</th><th>값</th><th>단위</th><th>출처 시각</th><th>조회 시각</th><th>출처</th></tr></thead><tbody id="live-rows"><tr><td colspan="6">아직 실제 기록이 없습니다.</td></tr></tbody></table></div></section>
+
+    <section class="card replay"><div class="section-head"><div><p class="label">DETERMINISTIC REPLAY</p><h2>합성 장애 실험실</h2></div><div class="status-pair"><span id="replay-freshness" class="badge neutral">reset</span><code id="replay-error">error_code: none</code></div></div>
+      <p class="separation">이 영역은 공개 fixture 전용 별도 저장소입니다. 초기화해도 위 실제 기록은 삭제되지 않습니다.</p>
+      <div class="controls"><button data-fixture="normal-d1-a">D1-A · 100</button><button data-fixture="normal-d1-b">D1-B · 105</button><button data-fixture="normal-d2">D2 · 120</button><button data-fixture="timeout">느린 응답</button><button data-fixture="auth-401">외부 401/403</button><button data-fixture="rate-429">호출 제한</button><button data-fixture="offline">오프라인</button><button data-fixture="schema-break">형식 변경</button></div>
+      <div id="error-panel" class="error-panel" hidden><div><strong id="error-title"></strong><p id="error-explain"></p><p id="error-action"></p></div><button id="retry">다시 시도 / 복구</button></div>
+      <div class="replay-summary"><div><span>마지막 정상값</span><strong id="replay-value">—</strong></div><div><span>일별 행</span><strong id="replay-count">0</strong></div><div><span>변화량</span><strong id="replay-delta">—</strong></div><button id="reset-replay" class="ghost">합성 상태 초기화</button></div>
+      <div class="table-wrap"><table><thead><tr><th>record ID</th><th>KST 날짜</th><th>값</th><th>단위</th></tr></thead><tbody id="replay-rows"><tr><td colspan="4">합성 상태가 비어 있습니다.</td></tr></tbody></table></div>
+    </section>
+
+    <section class="card audit"><div class="section-head"><div><p class="label">TRACEABILITY</p><h2>원자료 → 저장값 → 화면값</h2></div><span>반올림 없음 · API 제공 °C 그대로 저장</span></div><div class="audit-grid"><div><span>원자료</span><pre id="raw-value">—</pre></div><div><span>정규화·저장값</span><pre id="stored-value">—</pre></div><div><span>화면 표시값</span><pre id="shown-value">—</pre></div></div><details><summary>데이터·개인정보 정책</summary><p>고정 공개 지점인 서울의 비개인 기온만 조회합니다. API 키, 계정, 사용자 위치, 식별자, 개인 기록을 수집하거나 전송하지 않습니다. 실제 기록과 합성 replay는 브라우저의 서로 다른 저장 키에 보존됩니다.</p></details></section>
+  </main>
+  <footer><span>Public contract v2</span><a href="assets/public-contract.json">계약 보기</a><a href="assets/asset-manifest.json">SHA-256 manifest</a><a href="제출정보.json">실제 조회 영수증</a><a href="submission.md">제출 확인문</a></footer>
+</body></html>

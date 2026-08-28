@@ -1,6 +1,6 @@
 # 과제 4 제출 확인문
 
-위치: https://seokgw.github.io/security-portfolio/assignment5-real-information-board/ — 과제 4 원본은 보존하고, 과제 5에서 추가한 상태 표시 개선과 실제 정보, 일별 기록, 합성 장애 실험실을 한 페이지에서 확인합니다.
+위치: https://seokgw.github.io/security-portfolio/5/assignment5-real-information-board/ — 과제 4 원본은 보존하고, 과제 5에서 추가한 상태 표시 개선과 실제 정보, 일별 기록, 합성 장애 실험실을 한 페이지에서 확인합니다.
 
 행동: ① `실제 값 조회` ② 합성 상태 초기화 후 D1-A·D1-B와 실패 버튼 ③ `다시 시도 / 복구`를 누릅니다.
 

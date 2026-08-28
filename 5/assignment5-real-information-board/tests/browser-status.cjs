@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const { chromium } = require('C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 
-const baseUrl = process.env.TEST_BASE_URL || 'http://127.0.0.1:8000/assignment5-real-information-board/';
+const baseUrl = process.env.TEST_BASE_URL || 'http://127.0.0.1:8000/5/assignment5-real-information-board/';
 const screenshotDir = path.join(__dirname, '..', 'evidence');
 
 (async () => {

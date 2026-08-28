@@ -2,7 +2,7 @@
 
 ## 개선 기능
 
-과제 4(`t04-real-information-board`)를 복사한 과제 5 전용 폴더(`assignment5-real-information-board`)의 정보판에 **데이터 상태(`fresh` / `stale` / `error`)와 마지막 정상값을 사용자가 명확하게 구분할 수 있는 상태 표시 영역 개선** 1개만 구현한다.
+과제 4(`t04-real-information-board`)를 복사한 과제 5 전용 폴더(`5/assignment5-real-information-board`)의 정보판에 **데이터 상태(`fresh` / `stale` / `error`)와 마지막 정상값을 사용자가 명확하게 구분할 수 있는 상태 표시 영역 개선** 1개만 구현한다.
 
 - 기존 실패 재생 fixture 구조(`assets/fixtures/*.json`, `core.js`의 `runFixture`/`applyError`)와 마지막 정상값 보존 구조(`applySuccess`, `daily_readings`, `current_reading`)를 그대로 활용한다.
 - 새 기능을 새로 만들지 않고 기존 상태 모델(`status.freshness`)을 `fresh` / `stale` / `error` 세 값으로 확장하는 방식으로 작게 개선한다.
@@ -23,7 +23,7 @@
 
 - 공개 소스 저장소: https://github.com/seokgw/security-portfolio
 - 참조 프로젝트 경로: `t04-real-information-board/` (변경 금지)
-- 과제 5 작업 경로: `assignment5-real-information-board/`
+- 과제 5 작업 경로: `5/assignment5-real-information-board/`
 
 ## 시작 commit hash
 

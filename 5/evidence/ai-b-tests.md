@@ -1,6 +1,6 @@
 # AI B 검사 실행 결과
 
-- 검사 대상: `assignment5-real-information-board/`
+- 검사 대상: `5/assignment5-real-information-board/`
 - 과제 4 보존 확인: `git diff ae5eaf3 -- t04-real-information-board` 출력 없음
 - 실행 환경: Node v24.19.0, Google Chrome headless, Playwright, 1366×768 viewport
 - 종료 시각: 2026-08-28T12:48:01+09:00
@@ -28,6 +28,5 @@
 
 ## 증거
 
-- 자동 브라우저 검사: `assignment5-real-information-board/tests/browser-status.cjs`
-- 1366×768 렌더: `assignment5-real-information-board/evidence/t5-1366x768-error.png`
-
+- 자동 브라우저 검사: `5/assignment5-real-information-board/tests/browser-status.cjs`
+- 1366×768 렌더: `5/assignment5-real-information-board/evidence/t5-1366x768-error.png`

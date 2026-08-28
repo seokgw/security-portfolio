@@ -33,7 +33,7 @@ python -m http.server 8000
 [정보보안 포트폴리오 열기](https://seokgw.github.io/security-portfolio/)
 
 - [과제 4 실제 정보판](https://seokgw.github.io/security-portfolio/t04-real-information-board/)
-- [과제 5 상태 표시 개선·비교 보고서](https://seokgw.github.io/security-portfolio/assignment5-real-information-board/)
+- [과제 5 상태 표시 개선·비교 보고서](https://seokgw.github.io/security-portfolio/5/assignment5-real-information-board/)
 
 ## 검증 안내서
 

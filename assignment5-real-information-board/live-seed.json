@@ -1,0 +1,28 @@
+{
+  "schema_version": "aleph-t04-live-seed-v1",
+  "source": "Direct public API retrieval; not a fixture",
+  "readings": [
+    {
+      "signal_id": "open-meteo.seoul.temperature-2m",
+      "normalized_value": 30.2,
+      "unit": "°C",
+      "source_name": "Open-Meteo",
+      "source_url": "https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current=temperature_2m&timezone=Asia%2FSeoul",
+      "source_time": "2026-08-27T04:30:00.000Z",
+      "fetched_at": "2026-08-27T04:34:57.000Z",
+      "record_timezone": "Asia/Seoul",
+      "record_date": "2026-08-27"
+    },
+    {
+      "signal_id": "open-meteo.seoul.temperature-2m",
+      "normalized_value": 25.2,
+      "unit": "°C",
+      "source_name": "Open-Meteo",
+      "source_url": "https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current=temperature_2m&timezone=Asia%2FSeoul",
+      "source_time": "2026-08-28T00:00:00.000Z",
+      "fetched_at": "2026-08-28T00:02:54.000Z",
+      "record_timezone": "Asia/Seoul",
+      "record_date": "2026-08-28"
+    }
+  ]
+}

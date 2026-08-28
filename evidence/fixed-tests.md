@@ -2,7 +2,8 @@
 
 구현을 시작하기 전에 고정한다. 작업 도중 삭제·완화·기대값 변경을 하지 않는다.
 
-대상: `t04-real-information-board` (과제 4)
+참조 원본: `t04-real-information-board` (과제 4, 변경 금지)
+검사 대상: `assignment5-real-information-board` (과제 5)
 개선 기능: 데이터 상태(`fresh` / `stale` / `error`)와 마지막 정상값을 사용자가 명확히 구분할 수 있는 상태 표시 영역 개선
 
 ---

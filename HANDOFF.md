@@ -1,5 +1,9 @@
 # 1. 목표
 
+> 현재 작업 경로 보정(2026-08-28): 과제 4 원본은 변경하지 않고, 아래에 기록된 과제 5 개선본은 `assignment5-real-information-board/`에서 계속한다. 아래의 `t04-real-information-board/` 경로는 AI A 작업 당시의 역사적 기록이다.
+>
+> AI B 완료 보정(2026-08-28): 5절의 남은 문제를 모두 처리했다. Node 로직 테스트 23/23, 브라우저 고정 검사 10/10이 PASS했고, `evidence/ai-b-tests.md`, `evidence/comparison.md`, 과제 5 페이지의 공개 보고서를 완성했다. 과제 4 폴더는 기준 commit `ae5eaf3`과 차이가 없다.
+
 과제 4(`t04-real-information-board`)의 정보판에 작은 개선 기능 1개를 추가한다.
 
 **개선 기능: 데이터 상태(`fresh` / `stale` / `error`)와 마지막 정상값을 사용자가 명확히 구분할 수 있는 상태 표시 영역 개선.**

@@ -28,7 +28,7 @@ function renderLive(){
   const r=live.current_reading,s=live.status;
   el('live-badge').className=`badge ${s?.freshness||'neutral'}`;el('live-badge').textContent=s?s.freshness:'조회 전';
   el('live-value').textContent=r?r.normalized_value:'—';el('live-unit').textContent=r?r.unit:'°C';
-  el('live-note').textContent=s?.freshness==='stale'?'이번 조회는 실패했습니다. 마지막 정상값(오래된 값)을 보존해 표시합니다.':r?'공개 원천에서 정상 조회한 최신 값입니다.':'공개 원천에서 최신 값을 조회하세요.';
+  el('live-note').textContent=s?.freshness==='stale'?'이번 조회는 실패했습니다. 마지막 정상값(오래된 값)을 보존해 표시합니다.':s?.freshness==='error'?'이번 조회가 실패했고 아직 보존된 정상값이 없습니다. 값을 표시하지 않습니다.':r?'공개 원천에서 정상 조회한 최신 값입니다.':'공개 원천에서 최신 값을 조회하세요.';
   el('live-source-time').textContent=r?formatTime(r.source_time):'—';el('live-fetched-time').textContent=r?formatTime(r.fetched_at):'—';
   el('live-source').href=r?.source_url||'https://open-meteo.com/';
   const rows=[...live.daily_readings].reverse();el('live-count').textContent=`${rows.length} / 정확히 2건 필요`;
@@ -55,7 +55,7 @@ const ERRORS={timeout:['외부 데이터 응답이 너무 늦습니다.','제한
 function renderReplay(){
   const r=replay.current_reading,s=replay.status;el('replay-freshness').className=`badge ${s?.freshness||'neutral'}`;el('replay-freshness').textContent=s?.freshness||'reset';el('replay-error').textContent=`error_code: ${s?.error_code||'none'}`;el('replay-value').textContent=r?`${r.normalized_value} ${r.unit}${s?.freshness==='stale'?' · 오래된 값':''}`:'—';el('replay-count').textContent=replay.daily_readings.length;el('replay-delta').textContent=replay.comparison.state==='comparable'?`${replay.comparison.signed_delta>0?'+':''}${replay.comparison.signed_delta} ${replay.comparison.unit}`:'—';
   el('replay-rows').innerHTML=replay.daily_readings.length?replay.daily_readings.map(x=>`<tr><td>${esc(x.record_id)}</td><td>${esc(x.record_date)}</td><td>${esc(x.normalized_value)}</td><td>${esc(x.unit)}</td></tr>`).join(''):'<tr><td colspan="4">합성 상태가 비어 있습니다.</td></tr>';
-  const failed=s?.freshness==='stale';el('error-panel').hidden=!failed;if(failed){const copy=ERRORS[s.error_code];el('error-title').textContent=copy[0];el('error-explain').textContent=copy[1];el('error-action').textContent=copy[2]}
+  const failed=s?.freshness==='stale'||s?.freshness==='error';el('error-panel').hidden=!failed;if(failed){const copy=ERRORS[s.error_code];el('error-title').textContent=copy[0];el('error-explain').textContent=s.freshness==='error'?'정상값이 아직 없어 이번 실패로는 화면에 표시할 값이 없습니다.':copy[1];el('error-action').textContent=copy[2]}
 }
 async function play(name){const response=await fetch(`${FIXTURE_BASE}${name}.json`);const fixture=await response.json();replay=C.runFixture(replay,fixture);save(REPLAY_KEY,replay);renderReplay()}
 document.querySelectorAll('[data-fixture]').forEach(b=>b.addEventListener('click',()=>play(b.dataset.fixture)));

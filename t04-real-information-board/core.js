@@ -63,7 +63,8 @@ function applySuccess(input, reading, meta={}) {
 function applyError(input, code, meta={}) {
   if (!ERROR_CODES.includes(code)) throw new TypeError('unsupported error code');
   const state = clone(input);
-  state.status = {freshness:'stale',error_code:code};
+  const freshness = input.current_reading ? 'stale' : 'error';
+  state.status = {freshness,error_code:code};
   state.last_run = {outcome:'error',fixture_id:meta.fixture_id || null,at:meta.at || null,retry_after_seconds:meta.retry_after_seconds ?? null};
   return state;
 }

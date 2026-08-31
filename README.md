@@ -34,6 +34,7 @@ python -m http.server 8000
 
 - [과제 4 실제 정보판](https://seokgw.github.io/security-portfolio/t04-real-information-board/)
 - [과제 5 상태 표시 개선·비교 보고서](https://seokgw.github.io/security-portfolio/5/assignment5-real-information-board/)
+- [과제 6 플랜두씨 다이어리](https://seokgw.github.io/security-portfolio/pds-diary/)
 
 ## 검증 안내서
 

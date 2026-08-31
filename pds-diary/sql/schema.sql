@@ -1,0 +1,40 @@
+CREATE DATABASE IF NOT EXISTS pds_diary CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE pds_diary;
+
+CREATE TABLE IF NOT EXISTS plans (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255) NOT NULL, description TEXT,
+ start_date DATE NOT NULL, end_date DATE NOT NULL, priority ENUM('low','medium','high') NOT NULL,
+ success_criteria TEXT NOT NULL, estimated_minutes INT UNSIGNED NOT NULL DEFAULT 0, carried_improvement TEXT NULL,
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS plan_history (
+ history_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, plan_id BIGINT UNSIGNED NOT NULL, title VARCHAR(255) NOT NULL,
+ description TEXT, start_date DATE NOT NULL, end_date DATE NOT NULL, priority ENUM('low','medium','high') NOT NULL,
+ success_criteria TEXT NOT NULL, estimated_minutes INT UNSIGNED NOT NULL, carried_improvement TEXT NULL,
+ saved_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_plan_history_plan FOREIGN KEY(plan_id) REFERENCES plans(id) ON DELETE CASCADE,
+ INDEX idx_history_plan(plan_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS tasks (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, plan_id BIGINT UNSIGNED NOT NULL, title VARCHAR(255) NOT NULL, description TEXT,
+ due_date DATE NOT NULL, priority ENUM('low','medium','high') NOT NULL, tag VARCHAR(100), estimated_minutes INT UNSIGNED NOT NULL DEFAULT 0,
+ status ENUM('todo','in_progress','completed') NOT NULL DEFAULT 'todo', completed_at DATETIME NULL, deleted_at DATETIME NULL,
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ CONSTRAINT fk_tasks_plan FOREIGN KEY(plan_id) REFERENCES plans(id) ON DELETE CASCADE,
+ INDEX idx_tasks_plan(plan_id), INDEX idx_tasks_status(status), INDEX idx_tasks_due_date(due_date), INDEX idx_tasks_priority(priority), INDEX idx_tasks_tag(tag)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS execution_logs (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, task_id BIGINT UNSIGNED NOT NULL, start_time DATETIME NOT NULL, end_time DATETIME NOT NULL,
+ actual_minutes INT UNSIGNED NOT NULL, blocker_reason TEXT NULL, work_done TEXT NULL, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ CONSTRAINT fk_execution_task FOREIGN KEY(task_id) REFERENCES tasks(id) ON DELETE CASCADE, INDEX idx_execution_task(task_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS task_completion_events (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, task_id BIGINT UNSIGNED NOT NULL, completion_key VARCHAR(100) NOT NULL,
+ completed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_completion_task FOREIGN KEY(task_id) REFERENCES tasks(id) ON DELETE CASCADE,
+ CONSTRAINT uq_completion_key UNIQUE(completion_key), INDEX idx_completion_task(task_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS reflections (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, plan_id BIGINT UNSIGNED NOT NULL, improvement TEXT NOT NULL,
+ carried_to_plan_id BIGINT UNSIGNED NULL, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ CONSTRAINT fk_reflection_plan FOREIGN KEY(plan_id) REFERENCES plans(id) ON DELETE CASCADE,
+ CONSTRAINT fk_reflection_next_plan FOREIGN KEY(carried_to_plan_id) REFERENCES plans(id) ON DELETE SET NULL, INDEX idx_reflection_plan(plan_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

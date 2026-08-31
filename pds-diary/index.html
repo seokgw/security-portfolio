@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>플랜두씨 다이어리 1 — MariaDB</title>
+  <style>
+    :root{--ink:#18211b;--paper:#f4f1e8;--card:#fffdf7;--green:#1d5b42;--lime:#cde86b;--line:#d8d7cc}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,"Noto Sans KR",sans-serif}.wrap{width:min(100% - 40px,980px);margin:auto;padding:56px 0}.eyebrow{color:var(--green);font-size:12px;font-weight:800;letter-spacing:2px}h1{font-size:clamp(38px,7vw,76px);line-height:1;letter-spacing:-3px;margin:12px 0 22px}.notice{padding:15px 18px;background:#fff5d9;border:1px solid #d7a94b;border-radius:12px;font-weight:700}.hero{margin-top:22px;padding:clamp(28px,6vw,64px);background:var(--green);color:white;border-radius:26px}.hero p{max-width:680px;line-height:1.7;color:#e0ebe4}.flow{display:flex;gap:12px;align-items:center;margin:26px 0}.flow b{background:#164734;color:var(--lime);padding:12px 16px;border-radius:999px}.actions{display:flex;gap:10px;flex-wrap:wrap}.button{display:inline-block;padding:13px 18px;border-radius:10px;background:var(--lime);color:var(--ink);text-decoration:none;font-weight:800}.button.secondary{background:transparent;color:white;border:1px solid #a4c6b4}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}.card strong{display:block;margin-bottom:8px}.card p{color:#627067;line-height:1.6;margin:0;font-size:14px}@media(max-width:680px){.grid{grid-template-columns:1fr}h1{letter-spacing:-2px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <span class="eyebrow">ASSIGNMENT 6 · PLAN DO SEE</span>
+    <h1>플랜두씨<br>다이어리 1</h1>
+    <p class="notice">지금은 로그인이 없어 링크를 아는 사람은 누구나 볼 수 있습니다. 남이 봐도 괜찮은 내용만 넣으세요</p>
+    <section class="hero">
+      <span class="eyebrow" style="color:var(--lime)">CURRENT PROJECT</span>
+      <h2>MCP 서버 구축 및 Tool 연동</h2>
+      <p>실제 MCP 서버 구축 과정을 계획하고, 실행 기록을 남기고, MariaDB 집계와 근거 기록으로 돌아보는 웹 다이어리입니다.</p>
+      <div class="flow"><b>PLAN</b><span>→</span><b>DO</b><span>→</span><b>SEE</b></div>
+      <div class="actions">
+        <a class="button" href="http://35.254.91.12/">실제 다이어리 열기</a>
+        <a class="button secondary" href="https://github.com/seokgw/security-portfolio/tree/main/pds-diary">소스 코드 보기</a>
+      </div>
+    </section>
+    <section class="grid" aria-label="구현 요약">
+      <article class="card"><strong>Server</strong><p>Node.js, Express REST API와 transaction 기반 Plan 수정 및 Task 완료 처리</p></article>
+      <article class="card"><strong>Database</strong><p>MariaDB utf8mb4, soft delete, 수정 이력, 실행 기록과 클릭 가능한 See 근거</p></article>
+      <article class="card"><strong>Deployment</strong><p>GCP VM, Nginx, systemd로 운영하며 DB와 Node 포트는 외부에 노출하지 않음</p></article>
+    </section>
+  </main>
+</body>
+</html>

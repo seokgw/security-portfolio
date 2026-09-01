@@ -40,7 +40,7 @@ sudo systemctl status pds-diary
 sudo journalctl -u pds-diary -f
 ```
 
-브라우저에서는 `http://35.254.91.12`로 접속합니다. 외부 요청이 안 되면 GCP에 `tcp:80` 인그레스 규칙이 있고 그 규칙의 대상 태그가 이 VM에 적용되어 있는지 확인하세요.
+브라우저에서는 `https://35.254.91.12`로 접속합니다. 외부 요청이 안 되면 GCP에 `tcp:80`, `tcp:443` 인그레스 규칙이 있고 그 규칙의 대상 태그가 이 VM에 적용되어 있는지 확인하세요. IP 인증서는 6일짜리이므로 Certbot timer와 `/etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh`를 유지하고 `sudo certbot renew --dry-run`으로 갱신을 점검합니다.
 
 ## 보안
 

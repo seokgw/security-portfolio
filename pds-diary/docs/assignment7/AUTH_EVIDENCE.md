@@ -8,7 +8,7 @@
 | JWT HttpOnly/SameSite 쿠키, URL 저장 없음 | PASS | `src/server.js`, static test |
 | 서버 jti/idle/absolute/revoke | PASS | `auth_sessions`, `auth` middleware |
 | bcryptjs cost 12, UNIQUE 사용자 | PASS | register route, schema |
-| 비로그인 보호 API 401 | PASS (코드/정적) | `/api` auth middleware |
+| 비로그인 보호 API 401 | PASS (실제 HTTPS) | `GET https://35.254.91.12/api/plans` → 401 |
 | 클라이언트 owner/user ID 무시 | PASS | body 값을 읽지 않는 정적 검사 |
 | 모든 주요 목록 owner filter | PASS | plans/tasks/executions/reflections/daily/export routes |
 | 로그아웃 후 동일 JWT 401 | NOT YET (DB HTTP 실행 필요) | logout revocation 구현 완료 |
@@ -17,5 +17,14 @@
 | 동일 비밀번호 hash가 서로 다름 | NOT YET (실제 DB 확인 필요) | bcrypt random salt 구현 완료 |
 | 기존 T06 데이터 최초 계정 인계 | NOT YET (운영 DB migration 필요) | register transaction 구현 완료 |
 | 실제 5일 + 규칙 변경 정확히 1회 | NOT YET | 실제 날짜가 지나야 함 |
+
+## 실제 배포 증거 (2026-09-01)
+
+- 결과물: `https://35.254.91.12/` → 200, 로그인 화면 확인
+- HTTP: `http://35.254.91.12/` → HTTPS 301
+- health: `https://35.254.91.12/api/health` → 200
+- 비로그인 보호 API: `https://35.254.91.12/api/plans` → 401
+- 기존 Plan: 1건 보존, 최초 사용자 인계를 기다리는 `owner_id IS NULL` 1건
+- Let’s Encrypt IP 인증서: 2026-09-07 만료, Certbot 자동 갱신 timer enabled, `renew --dry-run` 성공
 
 실제 HTTP 증거를 만들 때 JWT는 `eyJhbGciOi...생략`, 비밀번호는 `[REDACTED]`로 적는다. A/B 공격 전후 각 계정의 건수와 값을 함께 기록한다.

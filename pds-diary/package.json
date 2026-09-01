@@ -2,6 +2,19 @@
   "name": "pds-diary-mariadb",
   "version": "2.0.0",
   "private": true,
-  "scripts": {"start":"node src/server.js","dev":"node --watch src/server.js","test":"node --test tests/*.test.js","verify":"node scripts/verify.js"},
-  "dependencies": {"dotenv":"^16.4.7","express":"^4.21.2","mysql2":"^3.11.5"}
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test tests/*.test.js",
+    "verify": "node scripts/verify.js",
+    "test:auth-evidence": "node --test tests/static.test.js"
+  },
+  "dependencies": {
+    "bcryptjs": "3.0.2",
+    "cookie-parser": "1.4.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "9.0.2",
+    "mysql2": "^3.11.5"
+  }
 }

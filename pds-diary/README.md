@@ -1,6 +1,6 @@
-# 플랜두씨 다이어리 1 — MariaDB
+# 플랜두씨 다이어리 2 — JWT 인증 + MariaDB
 
-MCP 서버 구축 과정을 **Plan → Do → See**로 연결해 기록하는 공개 웹 다이어리입니다. 로그인은 없으며 원본 데이터는 브라우저 저장소가 아니라 MariaDB에 저장됩니다.
+MCP 서버 구축 과정을 **Plan → Do → See**로 연결해 기록하는 개인 웹 다이어리입니다. JWT와 서버측 세션을 검증한 뒤 본인 소유 데이터만 MariaDB에서 제공합니다. 과제 7 상세 문서는 [`docs/assignment7/AUTH_IMPLEMENTATION.md`](docs/assignment7/AUTH_IMPLEMENTATION.md)에 있습니다.
 
 ## 설치와 실행
 

@@ -13,7 +13,7 @@
 
 - T06 최종 commit: `9e9979e`
 - T07 작업 시작 commit: `9e9979e`
-- T07 최종 commit: 커밋 후 `git rev-parse HEAD`로 확인
+- T07 구현 commit: `8eb377e`
 - 검사: `git merge-base --is-ancestor 9e9979e HEAD`
 
 ## 다음 실제 날짜 행동

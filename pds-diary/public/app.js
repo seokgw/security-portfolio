@@ -43,13 +43,13 @@ async function renderReflections(){if(!state.plan)return;const rows=await api('/
 $('#exportBtn').onclick=()=>{const a=document.createElement('a');a.href='/api/export';a.download='pds-export.json';a.click()};
 function showAuth(){state.plans=[];state.plan=null;$('#authView').classList.remove('hidden');$('#appShell').classList.add('hidden')}
 async function loadDaily(){const d=await api('/api/daily-records');$('#dailySummary').replaceChildren(stat('유효 기록',d.summary.valid_count+'일'),stat('합계',d.summary.total),stat('평균',d.summary.average??'-'));$('#dailyList').replaceChildren(...d.rows.map(r=>{const n=el('div');n.append(el('b','',`${dateText(r.record_date)} · ${r.metric_value}${r.metric_unit}`),el('p','',r.metric_name),el('small','muted',`${r.plan_rule} · ${r.calculation_rule}`));return n}))}
-async function showApp(user){$('#currentUser').textContent=user.username;$('#authView').classList.add('hidden');$('#appShell').classList.remove('hidden');await Promise.all([load(),loadDaily()]);activateView(location.hash.slice(1),false)}
-async function submitAuth(form,url){const message=$('#authMessage');message.textContent='';try{const data=await api(url,{method:'POST',body:JSON.stringify(body(form))});if(url.endsWith('register')){form.reset();message.textContent='계정이 생성되었습니다. 로그인해 주세요.'}else{form.reset();await showApp(data.user)}}catch(e){message.textContent=e.message}}
+async function showApp(user,preserveView){$('#currentUser').textContent=user.username;$('#authView').classList.add('hidden');$('#appShell').classList.remove('hidden');await Promise.all([load(),loadDaily()]);activateView(preserveView?location.hash.slice(1):'dashboard',!preserveView)}
+async function submitAuth(form,url){const message=$('#authMessage');message.textContent='';try{const data=await api(url,{method:'POST',body:JSON.stringify(body(form))});if(url.endsWith('register')){form.reset();message.textContent='계정이 생성되었습니다. 로그인해 주세요.'}else{form.reset();await showApp(data.user,false)}}catch(e){message.textContent=e.message}}
 $('#loginForm').onsubmit=e=>{e.preventDefault();submitAuth(e.target,'/api/auth/login')};
 $('#registerForm').onsubmit=e=>{e.preventDefault();submitAuth(e.target,'/api/auth/register')};
-$('#logoutBtn').onclick=async()=>{await api('/api/auth/logout',{method:'POST',body:'{}'});showAuth()};
+$('#logoutBtn').onclick=async()=>{await api('/api/auth/logout',{method:'POST',body:'{}'});history.replaceState(null,'','#dashboard');showAuth()};
 $('#passwordBtn').onclick=()=>$('#passwordDialog').showModal();$('#passwordCancel').onclick=()=>$('#passwordDialog').close();
 $('#passwordForm').onsubmit=async e=>{e.preventDefault();try{await api('/api/auth/password',{method:'POST',body:JSON.stringify(body(e.target))});$('#passwordDialog').close();showAuth();$('#authMessage').textContent='비밀번호가 변경되었습니다. 다시 로그인해 주세요.'}catch(x){toast(x.message)}};
 $('#dailyForm').onsubmit=async e=>{e.preventDefault();try{await api('/api/daily-records',{method:'POST',body:JSON.stringify(body(e.target))});e.target.reset();await loadDaily();toast('실제 날짜 기록을 저장했습니다.')}catch(x){toast(x.message)}};
 $('#ruleForm').onsubmit=async e=>{e.preventDefault();try{await api('/api/rule-changes',{method:'POST',body:JSON.stringify(body(e.target))});e.target.reset();toast('계획 규칙 변경을 한 번 저장했습니다.')}catch(x){toast(x.message)}};
-(async()=>{try{const x=await api('/api/auth/me');await showApp(x.user)}catch(e){showAuth()}})();
+(async()=>{try{const x=await api('/api/auth/me');await showApp(x.user,true)}catch(e){showAuth()}})();

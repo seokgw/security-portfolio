@@ -10,3 +10,4 @@ test('스키마에 users, sessions, owner, 5일 기록과 규칙 변경이 있�
 test('환경 예시는 placeholder와 만료 정책만 포함한다',()=>{const e=read('.env.example');assert.match(e,/JWT_SECRET=change-me/);assert.match(e,/JWT_ABSOLUTE_SECONDS=28800/);assert.match(e,/SESSION_IDLE_SECONDS=1800/)});
 test('프론트는 innerHTML을 쓰지 않고 인증 쿠키를 same-origin으로 전송한다',()=>{const j=read('public/app.js');assert.ok(!j.includes('innerHTML'));assert.match(j,/credentials:'same-origin'/)});
 test('새로고침 후 URL hash에 저장된 현재 페이지를 복원한다',()=>{const j=read('public/app.js');assert.match(j,/history\.replaceState\(null,'',`#\$\{selected\}`\)/);assert.match(j,/activateView\(location\.hash\.slice\(1\),false\)/);assert.match(j,/addEventListener\('hashchange'/)});
+test('새 로그인은 dashboard, 세션 복원은 기존 페이지로 이동한다',()=>{const j=read('public/app.js');assert.match(j,/showApp\(data\.user,false\)/);assert.match(j,/showApp\(x\.user,true\)/);assert.match(j,/preserveView\?location\.hash\.slice\(1\):'dashboard'/)});

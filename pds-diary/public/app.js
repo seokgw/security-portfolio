@@ -25,7 +25,10 @@ async function refresh(){await load();toast('MariaDB에서 최신 데이터를 �
 function openTask(t){const form=$('#taskForm');form.reset();fill(form,t||{due_date:new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Seoul'})});$('#taskDialog').showModal()}
 async function toggleComplete(t,btn){btn.disabled=true;try{if(t.status==='completed')await api(`/api/tasks/${t.id}/reopen`,{method:'POST',body:'{}'});else await api(`/api/tasks/${t.id}/complete`,{method:'POST',body:JSON.stringify({completion_key:completionKey()})});await refresh()}catch(e){toast(e.message)}finally{btn.disabled=false}}
 async function removeTask(t){if(!confirm(`“${t.title}”을 삭제할까요?`))return;await api(`/api/tasks/${t.id}`,{method:'DELETE'});await refresh()}
-$$('nav button').forEach(b=>b.onclick=()=>{$$('nav button').forEach(x=>x.classList.toggle('active',x===b));$$('.view').forEach(v=>v.classList.toggle('active',v.id===b.dataset.view))});
+const viewNames=new Set($$('.view').map(v=>v.id));
+function activateView(name,updateHash=true){const selected=viewNames.has(name)?name:'dashboard';$$('nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===selected));$$('.view').forEach(v=>v.classList.toggle('active',v.id===selected));if(updateHash&&location.hash!==`#${selected}`)history.replaceState(null,'',`#${selected}`)}
+$$('nav button').forEach(b=>b.onclick=()=>activateView(b.dataset.view));
+window.addEventListener('hashchange',()=>activateView(location.hash.slice(1),false));
 $('#newPlan').onclick=()=>{$('#planForm').reset();$('#planForm').elements.id.value=''};
 $('#planForm').onsubmit=async e=>{e.preventDefault();const d=body(e.target),id=d.id;delete d.id;await api(id?`/api/plans/${id}`:'/api/plans',{method:id?'PUT':'POST',body:JSON.stringify(d)});await refresh()};
 $('#historyBtn').onclick=async()=>{if(!state.plan)return;const rows=await api(`/api/plans/${state.plan.id}/history`),box=$('#historyList');box.classList.remove('hidden');box.replaceChildren(...rows.map(h=>{const n=el('div');n.append(el('b','',h.title),el('p','',`${dateText(h.start_date)} ~ ${dateText(h.end_date)} · ${h.estimated_minutes}분`),el('small','muted',`저장 시각 ${h.saved_at}`));return n}))};
@@ -40,7 +43,7 @@ async function renderReflections(){if(!state.plan)return;const rows=await api('/
 $('#exportBtn').onclick=()=>{const a=document.createElement('a');a.href='/api/export';a.download='pds-export.json';a.click()};
 function showAuth(){state.plans=[];state.plan=null;$('#authView').classList.remove('hidden');$('#appShell').classList.add('hidden')}
 async function loadDaily(){const d=await api('/api/daily-records');$('#dailySummary').replaceChildren(stat('유효 기록',d.summary.valid_count+'일'),stat('합계',d.summary.total),stat('평균',d.summary.average??'-'));$('#dailyList').replaceChildren(...d.rows.map(r=>{const n=el('div');n.append(el('b','',`${dateText(r.record_date)} · ${r.metric_value}${r.metric_unit}`),el('p','',r.metric_name),el('small','muted',`${r.plan_rule} · ${r.calculation_rule}`));return n}))}
-async function showApp(user){$('#currentUser').textContent=user.username;$('#authView').classList.add('hidden');$('#appShell').classList.remove('hidden');await Promise.all([load(),loadDaily()])}
+async function showApp(user){$('#currentUser').textContent=user.username;$('#authView').classList.add('hidden');$('#appShell').classList.remove('hidden');await Promise.all([load(),loadDaily()]);activateView(location.hash.slice(1),false)}
 async function submitAuth(form,url){const message=$('#authMessage');message.textContent='';try{const data=await api(url,{method:'POST',body:JSON.stringify(body(form))});if(url.endsWith('register')){form.reset();message.textContent='계정이 생성되었습니다. 로그인해 주세요.'}else{form.reset();await showApp(data.user)}}catch(e){message.textContent=e.message}}
 $('#loginForm').onsubmit=e=>{e.preventDefault();submitAuth(e.target,'/api/auth/login')};
 $('#registerForm').onsubmit=e=>{e.preventDefault();submitAuth(e.target,'/api/auth/register')};

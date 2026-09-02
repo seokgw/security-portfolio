@@ -1,5 +1,5 @@
 {
-  "name": "pds-diary-mariadb",
+  "name": "pds-diary-postgres",
   "version": "2.0.0",
   "private": true,
   "scripts": {
@@ -7,6 +7,7 @@
     "dev": "node --watch src/server.js",
     "test": "node --test tests/*.test.js",
     "verify": "node scripts/verify.js",
+    "migrate:mariadb": "node scripts/migrate-mariadb-to-postgres.js",
     "test:auth-evidence": "node --test tests/static.test.js"
   },
   "dependencies": {
@@ -15,6 +16,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "9.0.2",
-    "mysql2": "^3.11.5"
+    "mysql2": "^3.11.5",
+    "pg": "^8.16.3"
   }
 }

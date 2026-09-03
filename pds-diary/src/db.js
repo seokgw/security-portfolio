@@ -22,7 +22,9 @@ function duplicate(error){if(error.code==='23505')error.code='ER_DUP_ENTRY';retu
 async function execute(client,text,params=[]){
   const select=/^\s*(SELECT|WITH)\b/i.test(text);
   let query=sqlText(text);
-  if(/^\s*INSERT\b/i.test(query)&&!/\bRETURNING\b/i.test(query))query+=' RETURNING id';
+  if(/^\s*INSERT\b/i.test(query)&&!/\bRETURNING\b/i.test(query)){
+    query+=/^\s*INSERT\s+INTO\s+plan_history\b/i.test(query)?' RETURNING history_id AS id':' RETURNING id';
+  }
   try{
     const result=await client.query(query,params);
     if(select)return [result.rows,result.fields];

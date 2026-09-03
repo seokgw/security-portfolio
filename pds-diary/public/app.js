@@ -15,7 +15,7 @@ function completionKey(){
 function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n}
 function stat(label,value,type){const n=el('div','stat');n.dataset.type=type||'';n.append(el('span','muted',label),el('strong','',value));return n}
 function fill(form,data){for(const [k,v] of Object.entries(data||{}))if(form.elements[k])form.elements[k].value=v??''}
-async function load(){state.plans=await api('/api/plans');const saved=Number(sessionStorage.getItem('pds_plan_id')),selected=state.plans.find(x=>x.id===saved);state.plan=selected||state.plans[0]||null;if(!state.plan){renderPlanSelect();render();return}sessionStorage.setItem('pds_plan_id',state.plan.id);await loadPlan();render()}
+async function load(){state.plans=await api('/api/plans');const saved=sessionStorage.getItem('pds_plan_id'),selected=state.plans.find(x=>String(x.id)===saved);state.plan=selected||state.plans[0]||null;if(!state.plan){renderPlanSelect();render();return}sessionStorage.setItem('pds_plan_id',state.plan.id);await loadPlan();render()}
 async function loadPlan(){const allLogs=await api('/api/executions');await Promise.all([loadTasks(),api(`/api/plans/${state.plan.id}/review`).then(x=>state.review=x)]);state.logs=allLogs.filter(x=>x.plan_id===state.plan.id)}
 async function loadTasks(){state.tasks=await api(`/api/plans/${state.plan.id}/tasks`)}
 function renderPlanSelect(){const select=$('#planSelect');select.replaceChildren(...state.plans.map(p=>{const o=el('option','',p.title);o.value=p.id;return o}));select.disabled=!state.plans.length;select.value=state.plan?.id??'';$('#planCount').textContent=state.plans.length?`${state.plans.length}개 저장됨`:'저장된 Plan 없음'}
@@ -32,7 +32,7 @@ function activateView(name,updateHash=true){const selected=viewNames.has(name)?n
 $$('nav button').forEach(b=>b.onclick=()=>activateView(b.dataset.view));
 window.addEventListener('hashchange',()=>activateView(location.hash.slice(1),false));
 $('#newPlan').onclick=()=>{$('#planForm').reset();$('#planForm').elements.id.value=''};
-$('#planSelect').onchange=async e=>{const selected=state.plans.find(p=>p.id===Number(e.target.value));if(!selected)return;state.plan=selected;sessionStorage.setItem('pds_plan_id',selected.id);await loadPlan();render();toast(`“${selected.title}” Plan을 불러왔습니다.`)};
+$('#planSelect').onchange=async e=>{const selected=state.plans.find(p=>String(p.id)===e.target.value);if(!selected)return;state.plan=selected;sessionStorage.setItem('pds_plan_id',selected.id);await loadPlan();render();toast(`“${selected.title}” Plan을 불러왔습니다.`)};
 $('#planForm').onsubmit=async e=>{e.preventDefault();const d=body(e.target),id=d.id;delete d.id;const saved=await api(id?`/api/plans/${id}`:'/api/plans',{method:id?'PUT':'POST',body:JSON.stringify(d)});sessionStorage.setItem('pds_plan_id',saved.id);await refresh()};
 $('#historyBtn').onclick=async()=>{if(!state.plan)return;const rows=await api(`/api/plans/${state.plan.id}/history`),box=$('#historyList');box.classList.remove('hidden');box.replaceChildren(...rows.map(h=>{const n=el('div');n.append(el('b','',h.title),el('p','',`${dateText(h.start_date)} ~ ${dateText(h.end_date)} · ${h.estimated_minutes}분`),el('small','muted',`저장 시각 ${h.saved_at}`));return n}))};
 $('#addTask').onclick=()=>openTask();

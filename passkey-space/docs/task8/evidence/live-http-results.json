@@ -1,10 +1,10 @@
 {
   "origin": "https://passkey.35.254.91.12.sslip.io",
-  "generatedAt": "2026-09-08T01:28:51.440Z",
+  "generatedAt": "2026-09-08T02:03:32.154Z",
   "authenticator": "Chromium virtual security key; real HTTPS and server verification; TLS verification enabled",
   "testAccounts": [
-    "Evidence-A-mtrzqslc",
-    "Evidence-B-mtrzqslc"
+    "Evidence-A-mts0zcha",
+    "Evidence-B-mts0zcha"
   ],
   "results": [
     {
@@ -17,6 +17,27 @@
     {
       "request": "POST register/verify 검증용 노트북",
       "status": 200,
+      "response": {
+        "ok": true
+      }
+    },
+    {
+      "request": "Create encrypted note",
+      "status": 201,
+      "response": {
+        "ok": true
+      }
+    },
+    {
+      "request": "Update own note",
+      "status": 200,
+      "response": {
+        "ok": true
+      }
+    },
+    {
+      "request": "Upload private file",
+      "status": 201,
       "response": {
         "ok": true
       }
@@ -50,6 +71,27 @@
       }
     },
     {
+      "request": "B cannot read A note",
+      "status": 404,
+      "response": {
+        "error": "material_not_found"
+      }
+    },
+    {
+      "request": "B cannot download A file",
+      "status": 404,
+      "response": {
+        "error": "material_not_found"
+      }
+    },
+    {
+      "request": "B cannot delete A note",
+      "status": 404,
+      "response": {
+        "error": "material_not_found"
+      }
+    },
+    {
       "request": "POST login/verify bad signature",
       "status": 401,
       "response": {
@@ -68,6 +110,20 @@
       "status": 400,
       "response": {
         "error": "challenge_already_used"
+      }
+    },
+    {
+      "request": "Delete own note",
+      "status": 200,
+      "response": {
+        "ok": true
+      }
+    },
+    {
+      "request": "Delete own file",
+      "status": 200,
+      "response": {
+        "ok": true
       }
     },
     {

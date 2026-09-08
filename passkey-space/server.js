@@ -7,6 +7,7 @@ import { resolve, dirname } from 'node:path';
 import { generateRegistrationOptions, verifyRegistrationResponse,
   generateAuthenticationOptions, verifyAuthenticationResponse } from '@simplewebauthn/server';
 import { openStore } from './store.js';
+import { mountVault } from './vault.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const hash = value => createHash('sha256').update(value).digest('hex');
@@ -44,7 +45,8 @@ export function createApp({ origin = process.env.ORIGIN || 'http://localhost:300
     next();
   });
   app.use('/api', rateLimit({ windowMs: 60000, limit: 150, standardHeaders: 'draft-8', legacyHeaders: false }));
-  app.use(express.json({ limit: '32kb' }));
+  const smallJSON = express.json({ limit: '32kb' });
+  app.use((req,res,next) => req.path === '/api/vault' || req.path.startsWith('/api/vault/') ? next() : smallJSON(req,res,next));
   app.use('/api', (req, res, next) => {
     const cookies = Object.fromEntries((req.headers.cookie || '').split(';').map(v => v.trim().split('=')));
     req.sessionHash = cookies[cookieName] ? hash(cookies[cookieName]) : '';
@@ -192,6 +194,7 @@ export function createApp({ origin = process.env.ORIGIN || 'http://localhost:300
     res.json({ deleted: true, remaining: keys(req.auth.account).length, loggedOut: true });
   });
   app.get('/api/evidence', requireAuth, (req, res) => res.json(all('SELECT event,detail,created FROM evidence WHERE account=? ORDER BY id DESC LIMIT 50', req.auth.account)));
+  mountVault(app, { db, keyPath: resolve(dirname(dbPath), 'vault.key'), requireAuth, guardOwner });
   app.use('/api', (_req, res) => res.status(404).json({ error: 'not_found' }));
   app.get('/vendor/webauthn.js', (_req, res) => res.sendFile(resolve(here, 'node_modules/@simplewebauthn/browser/dist/bundle/index.umd.min.js')));
   app.use(express.static(resolve(here, 'public'), { index: 'index.html' }));

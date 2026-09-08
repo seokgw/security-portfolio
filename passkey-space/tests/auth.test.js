@@ -41,6 +41,7 @@ test('실제 Chromium WebAuthn 인증과 HTTP 접근 제어', { timeout: 120000 
     const auth1 = await authenticator();
     await page.goto(origin); await page.waitForFunction(() => !!window.SimpleWebAuthnBrowser);
     record('비로그인 GET /api/private', (await req('/private', null, 'GET')).status(), 401);
+    record('비로그인 보관함', (await req('/vault', null, 'GET')).status(), 401);
     const html = await (await context.request.get(origin)).text();
     assert.ok(!html.includes('가상의 보안 실습')); assert.ok(!html.includes('가상 조직 Alpha'));
     records.push({ test: '비로그인 HTML에 비공개 샘플 없음', result: 'PASS' });
@@ -59,6 +60,21 @@ test('실제 Chromium WebAuthn 인증과 HTTP 접근 제어', { timeout: 120000 
     assert.ok(db.prepare('SELECT public_key FROM credentials WHERE id=?').get(a1.credential.id).public_key.length > 0);
     record('등록 challenge 재사용', (await req('/passkey/register/verify', { challengeId: a1.f.challengeId, credential: a1.credential })).status(), 400);
     record('인증 후 자기 자료', (await req('/private', null, 'GET')).status(), 200);
+    const noteResponse=await req('/vault',{kind:'note',title:'테스트 비밀 제목',text:'실제 개인정보가 아닌 암호화 검증 문장'});
+    record('비밀 메모 생성',noteResponse.status(),201);
+    const materialId=(await noteResponse.json()).id;
+    const material=(await (await req(`/vault/${materialId}`,null,'GET')).json());
+    assert.equal(material.text,'실제 개인정보가 아닌 암호화 검증 문장');
+    const encrypted=db.prepare('SELECT metadata,content FROM vault WHERE id=?').get(materialId);
+    assert.ok(!Buffer.from(encrypted.content).includes(Buffer.from(material.text)));
+    assert.ok(!Buffer.from(encrypted.metadata).includes(Buffer.from(material.title)));
+    record('메모 수정',(await req(`/vault/${materialId}`,{title:'수정한 제목',text:'수정한 내용',updated:material.updated},'PUT')).status(),200);
+    record('오래된 편집 충돌',(await req(`/vault/${materialId}`,{title:'덮어쓰기',text:'거절',updated:material.updated},'PUT')).status(),409);
+    const fileResponse=await req('/vault',{kind:'file',title:'테스트 파일',filename:'검증.html',base64:Buffer.from('<script>alert(1)</script>').toString('base64')});
+    record('파일 저장',fileResponse.status(),201);const fileId=(await fileResponse.json()).id;
+    const download=await req(`/vault/${fileId}/download`,null,'GET');assert.equal(await download.text(),'<script>alert(1)</script>');assert.match(download.headers()['content-disposition'],/^attachment;/);
+    record('초과 파일 거절',(await req('/vault',{kind:'file',title:'크기 검사',filename:'test.bin',base64:Buffer.alloc(5*1024*1024+1).toString('base64')})).status(),413);
+    record('잘못된 파일 인코딩',(await req('/vault',{kind:'file',title:'검사',filename:'test.bin',base64:'!!!!'})).status(),400);
     const exclude = await flow('/passkey/register/options', { name: '추가' });
     assert.ok(exclude.options.excludeCredentials.some(x => x.id === a1.credential.id));
     await req('/passkey/cancel', { challengeId: exclude.challengeId });
@@ -87,6 +103,10 @@ test('실제 Chromium WebAuthn 인증과 HTTP 접근 제어', { timeout: 120000 
     await req('/logout');
     const b1 = await registration('Account-B', 'B의 기기');
     const b = (await (await req('/session', null, 'GET')).json()).account.id;
+    for(const [suffix,method,body] of [['','GET',null],['/download','GET',null],['','PUT',{title:'공격',text:'실패',updated:material.updated}],['','DELETE',{}]]) {
+      record(`B → A 자료 ${method} ${suffix}`,(await req(`/vault/${materialId}${suffix}`,body,method)).status(),404);
+    }
+    assert.equal((await (await req('/vault',null,'GET')).json()).items.length,0);
     record('B → A query', (await req(`/private?userId=${a}`, null, 'GET')).status(), 403);
     record('B → A path', (await req(`/private/${a}`, null, 'GET')).status(), 403);
     record('B → A body', (await req('/private', { accountId: a })).status(), 403);
@@ -96,6 +116,10 @@ test('실제 Chromium WebAuthn 인증과 HTTP 접근 제어', { timeout: 120000 
     const aFlow = await flow('/passkey/login/options', { accountName: 'Account-A' });
     record('다른 계정 credential', (await req('/passkey/login/verify', { ...another, challengeId: aFlow.challengeId })).status(), 401);
     const loginA = await assertion('Account-A'); await req('/passkey/login/verify', loginA);
+    assert.equal((await (await req(`/vault/${materialId}`,null,'GET')).json()).text,'수정한 내용');
+    record('메모 삭제',(await req(`/vault/${materialId}`,{},'DELETE')).status(),200);
+    record('파일 삭제',(await req(`/vault/${fileId}`,{},'DELETE')).status(),200);
+    record('삭제 자료 조회',(await req(`/vault/${materialId}`,null,'GET')).status(),404);
     record('A → B query', (await req(`/private?userId=${b}`, null, 'GET')).status(), 403);
     record('A → B path', (await req(`/private/${b}`, null, 'GET')).status(), 403);
     record('A → B body', (await req('/private', { userId: b })).status(), 403);
@@ -129,6 +153,15 @@ test('실제 Chromium WebAuthn 인증과 HTTP 접근 제어', { timeout: 120000 
     await page.locator('#login-form button').click();
     await page.waitForSelector('#authenticated:not([hidden])');
     assert.equal(await page.locator('#notes article').count(), 3);
+    await page.locator('#note-title').fill('화면에서 만든 메모');
+    await page.locator('#note-text').fill('직접 작성한 가상 테스트 내용');
+    await page.locator('#note-form button').first().click();
+    await page.waitForFunction(()=>document.getElementById('materials').textContent.includes('화면에서 만든 메모'));
+    await page.reload();await page.waitForSelector('#materials article');
+    await page.getByRole('button',{name:'열기 / 수정'}).click();
+    await page.waitForFunction(()=>document.getElementById('note-text').value==='직접 작성한 가상 테스트 내용');
+    await page.screenshot({path:join(evidenceDir,'05-vault.png'),fullPage:true});
+    records.push({test:'메모 UI 작성·저장·새로고침·다시 열기',result:'PASS'});
     await page.locator('#logout').click();
     await page.waitForSelector('#entry:not([hidden])');
     assert.equal(await page.locator('#notes article').count(), 0);

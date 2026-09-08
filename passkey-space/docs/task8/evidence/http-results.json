@@ -1,9 +1,14 @@
 {
   "environment": "Local Chromium virtual authenticator; real WebAuthn library verification, no verification mocks",
-  "generatedAt": "2026-09-08T01:21:06.551Z",
+  "generatedAt": "2026-09-08T02:01:05.538Z",
   "records": [
     {
       "test": "비로그인 GET /api/private",
+      "status": 401,
+      "result": "PASS"
+    },
+    {
+      "test": "비로그인 보관함",
       "status": 401,
       "result": "PASS"
     },
@@ -19,8 +24,8 @@
     {
       "test": "서로 다른 등록 challenge",
       "prefixes": [
-        "R4zvisQz",
-        "Ax7wd7nu"
+        "XiuqATsP",
+        "WSiXyYKJ"
       ],
       "result": "PASS"
     },
@@ -45,6 +50,36 @@
       "result": "PASS"
     },
     {
+      "test": "비밀 메모 생성",
+      "status": 201,
+      "result": "PASS"
+    },
+    {
+      "test": "메모 수정",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "test": "오래된 편집 충돌",
+      "status": 409,
+      "result": "PASS"
+    },
+    {
+      "test": "파일 저장",
+      "status": 201,
+      "result": "PASS"
+    },
+    {
+      "test": "초과 파일 거절",
+      "status": 413,
+      "result": "PASS"
+    },
+    {
+      "test": "잘못된 파일 인코딩",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
       "test": "등록 내 휴대폰: 공개키 응답 검증",
       "status": 200,
       "result": "PASS"
@@ -57,8 +92,8 @@
     {
       "test": "서로 다른 로그인 challenge",
       "prefixes": [
-        "UOEUxrz2",
-        "dHg9wSF5"
+        "R9dXhNm7",
+        "vzQ0z4qX"
       ],
       "result": "PASS"
     },
@@ -88,6 +123,26 @@
       "result": "PASS"
     },
     {
+      "test": "B → A 자료 GET ",
+      "status": 404,
+      "result": "PASS"
+    },
+    {
+      "test": "B → A 자료 GET /download",
+      "status": 404,
+      "result": "PASS"
+    },
+    {
+      "test": "B → A 자료 PUT ",
+      "status": 404,
+      "result": "PASS"
+    },
+    {
+      "test": "B → A 자료 DELETE ",
+      "status": 404,
+      "result": "PASS"
+    },
+    {
       "test": "B → A query",
       "status": 403,
       "result": "PASS"
@@ -110,6 +165,21 @@
     {
       "test": "다른 계정 credential",
       "status": 401,
+      "result": "PASS"
+    },
+    {
+      "test": "메모 삭제",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "test": "파일 삭제",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "test": "삭제 자료 조회",
+      "status": 404,
       "result": "PASS"
     },
     {
@@ -182,6 +252,10 @@
     {
       "test": "5분 경과 challenge",
       "status": 400,
+      "result": "PASS"
+    },
+    {
+      "test": "메모 UI 작성·저장·새로고침·다시 열기",
       "result": "PASS"
     },
     {

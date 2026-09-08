@@ -1,5 +1,7 @@
 # 배포 구성과 재현 방법
 
+후속 배포: 개인 메모·파일 보관함을 기존 서비스에 추가했다. DB 백업 후 적용했으며 로컬 50개/운영 HTTPS 23개 검사를 통과했다. [보관함 설명](PRIVATE_VAULT.md). 재배포 스크립트는 기존 HTTPS 구성을 유지한 채 새 설정을 조립하도록 개선했다.
+
 공개 입구: https://seokgw.github.io/security-portfolio/
 
 패스키 서비스 주소: https://passkey.35.254.91.12.sslip.io/

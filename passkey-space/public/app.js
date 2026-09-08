@@ -1,14 +1,15 @@
 /* Private note values are fetched only after server authentication. */
 const $ = id => document.getElementById(id);
 const errors = { no_registered_passkeys: '등록된 패스키가 없어 로그인할 수 없습니다. 계정 이름도 확인하세요.', account_exists_login_required: '이미 있는 계정입니다. 먼저 패스키로 로그인하세요.', authentication_verification_failed: '서명 검증에 실패했습니다. 다시 로그인하세요.', challenge_already_used: '이미 사용한 요청입니다. 새로 시도하세요.', challenge_expired: '요청이 만료되었습니다. 다시 시도하세요.', authentication_required: '인증이 만료되었습니다. 다시 로그인하세요.', credential_not_found: '삭제되었거나 이 계정에 속하지 않는 패스키입니다.' };
-let expiryTimer;
+let expiryTimer, editing = null, busy = false, generation = 0;
 async function api(path, method = 'GET', body) {
   const response = await fetch(`/api${path}`, { method, credentials: 'same-origin', cache: 'no-store', headers: method === 'GET' ? {} : { 'Content-Type': 'application/json' }, body: method === 'GET' ? undefined : JSON.stringify(body || {}) });
-  const data = await response.json();
+  const data = await response.json().catch(() => ({ error: '요청이 너무 크거나 서버가 응답하지 않습니다.' }));
   if (!response.ok) { if (response.status === 401) clearPrivate(); throw Error(errors[data.error] || `요청 실패: ${data.error}`); }
   return data;
 }
-function clearPrivate() { clearTimeout(expiryTimer); $('authenticated').hidden = true; $('entry').hidden = false; for (const id of ['notes', 'keys', 'evidence']) $(id).replaceChildren(); }
+function clearPrivate() { generation++; clearTimeout(expiryTimer); $('authenticated').hidden = true; $('entry').hidden = false; for (const id of ['notes', 'keys', 'evidence', 'materials']) $(id).replaceChildren(); resetEditor(); $('file-form').reset(); $('storage-usage').textContent = ''; }
+function resetEditor() { editing = null; $('note-form').reset(); $('editor-title').textContent='새 메모 작성'; $('cancel-edit').hidden=true; }
 function node(tag, value) { const el = document.createElement(tag); el.textContent = value; return el; }
 async function refresh() {
   const session = await api('/session');
@@ -18,6 +19,7 @@ async function refresh() {
   $('account-title').textContent = `${session.account.name}의 공간`;
   $('status').textContent = '🔓 인증됨 · 서버에서 비공개 자료를 불러왔습니다.';
   $('notes').replaceChildren(...data.notes.map(n => { const card = document.createElement('article'); card.append(node('h3', n.title), node('p', n.body)); return card; }));
+  await refreshMaterials();
   $('keys').replaceChildren(...keys.map(k => {
     const li = document.createElement('li'); li.append(node('span', `${k.name} / 등록일: ${new Date(k.created).toLocaleDateString('ko-KR')} / ${k.id.slice(0, 8)}…`));
     const button = node('button', '삭제'); button.className = 'secondary';
@@ -30,10 +32,41 @@ async function refresh() {
   clearTimeout(expiryTimer); expiryTimer = setTimeout(() => { clearPrivate(); $('status').textContent = '보호를 위해 화면을 잠갔습니다. 다시 로그인하세요.'; }, 3600000);
 }
 async function action(fn) {
+  if (busy) return;
+  busy = true;
   document.querySelectorAll('button').forEach(b => b.disabled = true);
   try { await fn(); } catch (e) { $('status').textContent = ['NotAllowedError', 'AbortError'].includes(e.name) ? '패스키 요청이 취소되었거나 시간이 초과되었습니다. 저장되지 않았습니다.' : e.message; }
-  finally { document.querySelectorAll('button').forEach(b => b.disabled = false); }
+  finally { busy = false; document.querySelectorAll('button').forEach(b => b.disabled = false); }
 }
+async function refreshMaterials() {
+  const current=generation, data=await api('/vault');
+  if(current!==generation) return;
+  $('storage-usage').textContent=`${(data.used/1024/1024).toFixed(2)} / 50 MB 사용 · ${data.items.length}개 자료`;
+  $('empty-materials').hidden=!!data.items.length;
+  $('materials').replaceChildren(...data.items.map(item=> {
+    const card=document.createElement('article');card.append(node('h3',item.title),node('p',`${item.kind==='note'?'메모':'파일'} · ${new Date(item.updated).toLocaleString('ko-KR')}`));
+    if(item.filename) card.append(node('p',item.filename));
+    const download=node('a','다운로드'); download.href=`/api/vault/${item.id}/download`; card.append(download);
+    if(item.kind==='note') {
+      const edit=node('button','열기 / 수정');edit.type='button';edit.className='secondary';
+      edit.onclick=()=>action(async()=> {
+        if(editing && !confirm('작성 중인 내용을 닫고 다른 메모를 열까요?')) return;
+        const row=await api(`/vault/${item.id}`);editing=row;$('note-title').value=row.title;$('note-text').value=row.text;$('editor-title').textContent='메모 수정';$('cancel-edit').hidden=false;$('note-title').focus();
+      });card.append(edit);
+    }
+    const remove=node('button','삭제');remove.type='button';remove.className='secondary';
+    remove.onclick=()=>action(async()=>{if(!confirm('이 자료를 삭제할까요? 보관함에서 복원할 수 없습니다.'))return;await api(`/vault/${item.id}`,'DELETE');if(editing?.id===item.id)resetEditor();await refreshMaterials();$('status').textContent='자료를 삭제했습니다.';});
+    card.append(remove);return card;
+  }));
+}
+$('cancel-edit').onclick=()=>{if(confirm('수정 중인 내용을 취소할까요?'))resetEditor();};
+$('note-form').onsubmit=e=>{e.preventDefault();action(async()=>{await api(editing?`/vault/${editing.id}`:'/vault',editing?'PUT':'POST',{kind:'note',title:$('note-title').value,text:$('note-text').value,updated:editing?.updated});resetEditor();await refreshMaterials();$('status').textContent='메모를 저장했습니다.';});};
+$('file-form').onsubmit=e=>{e.preventDefault();action(async()=>{
+  const file=$('material-file').files[0];if(!file||!file.size||file.size>5*1024*1024)throw Error('1바이트 이상, 5MB 이하 파일을 선택하세요.');
+  $('status').textContent='파일을 암호화 보관함에 저장하고 있습니다…';
+  const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result.split(',')[1]);reader.onerror=()=>reject(Error('파일을 읽지 못했습니다.'));reader.readAsDataURL(file);});
+  await api('/vault','POST',{kind:'file',title:$('file-title').value,filename:file.name,base64});$('file-form').reset();await refreshMaterials();$('status').textContent='파일을 저장했습니다.';
+});};
 async function register(accountName, name) {
   const flow = await api('/passkey/register/options', 'POST', { accountName, name });
   let credential;

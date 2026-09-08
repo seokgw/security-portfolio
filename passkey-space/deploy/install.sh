@@ -17,7 +17,7 @@ if ! test -x "$RUNTIME/bin/node"; then
 fi
 id portfolio-passkey >/dev/null 2>&1 || useradd --system --home "$APP" --shell /usr/sbin/nologin portfolio-passkey
 mkdir -p "$APP" /var/lib/portfolio-passkey /var/www/certbot
-cp "$SOURCE/server.js" "$SOURCE/store.js" "$SOURCE/package.json" "$SOURCE/pnpm-lock.yaml" "$APP/"
+cp "$SOURCE/server.js" "$SOURCE/store.js" "$SOURCE/vault.js" "$SOURCE/package.json" "$SOURCE/pnpm-lock.yaml" "$APP/"
 cp -R "$SOURCE/public" "$APP/"
 cd "$APP"
 export PATH="$RUNTIME/bin:$PATH"
@@ -54,7 +54,7 @@ systemctl daemon-reload
 systemctl enable --now portfolio-passkey
 systemctl restart portfolio-passkey
 curl --retry 30 --retry-connrefused --retry-delay 2 -fsS http://127.0.0.1:3008/api/health
-cat > /etc/nginx/sites-available/portfolio-passkey <<EOF
+cat > /etc/nginx/sites-available/portfolio-passkey.next <<EOF
 server {
   listen 80;
   server_name $DOMAIN;
@@ -62,11 +62,14 @@ server {
   location / { return 301 https://\$host\$request_uri; }
 }
 EOF
-ln -sfn /etc/nginx/sites-available/portfolio-passkey /etc/nginx/sites-enabled/portfolio-passkey
-nginx -t
-systemctl reload nginx
-certbot certonly --webroot -w /var/www/certbot -d "$DOMAIN" --non-interactive --agree-tos --register-unsafely-without-email
-cat >> /etc/nginx/sites-available/portfolio-passkey <<EOF
+if ! test -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem"; then
+  cp /etc/nginx/sites-available/portfolio-passkey.next /etc/nginx/sites-available/portfolio-passkey
+  ln -sfn /etc/nginx/sites-available/portfolio-passkey /etc/nginx/sites-enabled/portfolio-passkey
+  nginx -t
+  systemctl reload nginx
+  certbot certonly --webroot -w /var/www/certbot -d "$DOMAIN" --non-interactive --agree-tos --register-unsafely-without-email
+fi
+cat >> /etc/nginx/sites-available/portfolio-passkey.next <<EOF
 server {
   listen 443 ssl;
   server_name $DOMAIN;
@@ -75,6 +78,7 @@ server {
   ssl_protocols TLSv1.2 TLSv1.3;
   add_header Strict-Transport-Security "max-age=31536000" always;
   location / {
+    client_max_body_size 7m;
     proxy_pass http://127.0.0.1:3008;
     proxy_set_header Host \$host;
     proxy_set_header X-Forwarded-For \$remote_addr;
@@ -82,8 +86,10 @@ server {
   }
 }
 EOF
+mv /etc/nginx/sites-available/portfolio-passkey.next /etc/nginx/sites-available/portfolio-passkey
+ln -sfn /etc/nginx/sites-available/portfolio-passkey /etc/nginx/sites-enabled/portfolio-passkey
 nginx -t
 systemctl reload nginx
 systemctl is-active portfolio-passkey pds-diary
-curl -fsS "https://$DOMAIN/api/health"
+curl --retry 10 --retry-all-errors --retry-delay 2 -fsS "https://$DOMAIN/api/health"
 echo PASSKEY_DEPLOY_OK

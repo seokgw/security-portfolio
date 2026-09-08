@@ -1,0 +1,116 @@
+{
+  "origin": "https://passkey.35.254.91.12.sslip.io",
+  "generatedAt": "2026-09-08T01:28:51.440Z",
+  "authenticator": "Chromium virtual security key; real HTTPS and server verification; TLS verification enabled",
+  "testAccounts": [
+    "Evidence-A-mtrzqslc",
+    "Evidence-B-mtrzqslc"
+  ],
+  "results": [
+    {
+      "request": "GET /api/private without cookie",
+      "status": 401,
+      "response": {
+        "error": "authentication_required"
+      }
+    },
+    {
+      "request": "POST register/verify 검증용 노트북",
+      "status": 200,
+      "response": {
+        "ok": true
+      }
+    },
+    {
+      "request": "POST register/verify 검증용 두 번째 키",
+      "status": 200,
+      "response": {
+        "ok": true
+      }
+    },
+    {
+      "request": "GET private with logged-out cookie",
+      "status": 401,
+      "response": {
+        "error": "authentication_required"
+      }
+    },
+    {
+      "request": "POST register/verify 검증용 B 키",
+      "status": 200,
+      "response": {
+        "ok": true
+      }
+    },
+    {
+      "request": "B GET /api/private?userId=A",
+      "status": 403,
+      "response": {
+        "error": "account_access_denied"
+      }
+    },
+    {
+      "request": "POST login/verify bad signature",
+      "status": 401,
+      "response": {
+        "error": "authentication_verification_failed"
+      }
+    },
+    {
+      "request": "POST login/verify correct signature",
+      "status": 200,
+      "response": {
+        "ok": true
+      }
+    },
+    {
+      "request": "POST login/verify replay",
+      "status": 400,
+      "response": {
+        "error": "challenge_already_used"
+      }
+    },
+    {
+      "request": "A GET /api/private?userId=B",
+      "status": 403,
+      "response": {
+        "error": "account_access_denied"
+      }
+    },
+    {
+      "request": "A POST /api/private accountId=B",
+      "status": 403,
+      "response": {
+        "error": "account_access_denied"
+      }
+    },
+    {
+      "request": "DELETE first passkey",
+      "status": 200,
+      "response": {
+        "ok": true
+      }
+    },
+    {
+      "request": "Remaining passkey login",
+      "status": 200,
+      "response": {
+        "ok": true
+      }
+    },
+    {
+      "request": "Deleted passkey with fresh challenge",
+      "status": 401,
+      "response": {
+        "error": "credential_not_found"
+      }
+    },
+    {
+      "request": "Zero passkeys login",
+      "status": 401,
+      "response": {
+        "error": "no_registered_passkeys"
+      }
+    }
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "environment": "Local Chromium virtual authenticator; real WebAuthn library verification, no verification mocks",
+  "generatedAt": "2026-09-08T01:21:06.551Z",
+  "records": [
+    {
+      "test": "비로그인 GET /api/private",
+      "status": 401,
+      "result": "PASS"
+    },
+    {
+      "test": "비로그인 HTML에 비공개 샘플 없음",
+      "result": "PASS"
+    },
+    {
+      "test": "다른 Origin 등록 차단",
+      "status": 403,
+      "result": "PASS"
+    },
+    {
+      "test": "서로 다른 등록 challenge",
+      "prefixes": [
+        "R4zvisQz",
+        "Ax7wd7nu"
+      ],
+      "result": "PASS"
+    },
+    {
+      "test": "취소 challenge 재검증 차단",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "test": "등록 내 노트북: 공개키 응답 검증",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "test": "등록 challenge 재사용",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "test": "인증 후 자기 자료",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "test": "등록 내 휴대폰: 공개키 응답 검증",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "test": "로그아웃 전 쿠키 재사용",
+      "status": 401,
+      "result": "PASS"
+    },
+    {
+      "test": "서로 다른 로그인 challenge",
+      "prefixes": [
+        "UOEUxrz2",
+        "dHg9wSF5"
+      ],
+      "result": "PASS"
+    },
+    {
+      "test": "잘못된 서명",
+      "status": 401,
+      "result": "PASS"
+    },
+    {
+      "test": "실패한 challenge 재사용",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "test": "정상 서명 로그인",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "test": "정상 assertion 재사용",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "test": "등록 B의 기기: 공개키 응답 검증",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "test": "B → A query",
+      "status": 403,
+      "result": "PASS"
+    },
+    {
+      "test": "B → A path",
+      "status": 403,
+      "result": "PASS"
+    },
+    {
+      "test": "B → A body",
+      "status": 403,
+      "result": "PASS"
+    },
+    {
+      "test": "B → A 패스키 삭제",
+      "status": 404,
+      "result": "PASS"
+    },
+    {
+      "test": "다른 계정 credential",
+      "status": 401,
+      "result": "PASS"
+    },
+    {
+      "test": "A → B query",
+      "status": 403,
+      "result": "PASS"
+    },
+    {
+      "test": "A → B path",
+      "status": 403,
+      "result": "PASS"
+    },
+    {
+      "test": "A → B body",
+      "status": 403,
+      "result": "PASS"
+    },
+    {
+      "test": "교차 접근 거절 후 A/B 자료 개수",
+      "before": [
+        3,
+        3
+      ],
+      "after": [
+        3,
+        3
+      ],
+      "result": "PASS"
+    },
+    {
+      "test": "패스키 1 삭제",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "test": "삭제 직후 기존 인증 차단",
+      "status": 401,
+      "result": "PASS"
+    },
+    {
+      "test": "남은 패스키 로그인",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "test": "삭제한 패스키 + 새로운 challenge 로그인",
+      "status": 401,
+      "result": "PASS"
+    },
+    {
+      "test": "삭제 전 발급한 challenge",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "test": "마지막 패스키 삭제",
+      "status": 200,
+      "result": "PASS"
+    },
+    {
+      "test": "0개 계정 로그인",
+      "status": 401,
+      "result": "PASS"
+    },
+    {
+      "test": "0개 계정 무인증 재등록 금지",
+      "status": 409,
+      "result": "PASS"
+    },
+    {
+      "test": "5분 경과 challenge",
+      "status": 400,
+      "result": "PASS"
+    },
+    {
+      "test": "실제 로그인·로그아웃 버튼 및 DOM 데이터 제거",
+      "result": "PASS"
+    }
+  ]
+}

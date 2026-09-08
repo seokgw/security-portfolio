@@ -1,8 +1,13 @@
 .env
 node_modules/
+.pnpm-store/
 .env.local
 .env.production
 .DS_Store
 Thumbs.db
 *.log
+passkey-space/data/
+passkey-space/test-results/
+passkey-space/playwright-report/
+passkey-space/deploy/upload.tar.gz
 제출자료/과제3-AEGIS-검증자료/

@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Private Space · 패스키</title><link rel="stylesheet" href="style.css"><script src="/vendor/webauthn.js" defer></script><script src="app.js" defer></script></head>
+<body><header><a href="https://seokgw.github.io/security-portfolio/">← 공개 소개 페이지</a><span>SECURITY × BACKEND</span></header>
+<main><p class="eyebrow">06 / PASSKEY PROTECTED</p><h1>Private Space<span>.</span></h1><p class="lead">공개 소개와 분리된 나만의 공간.<br>기기의 패스키로 본인을 확인한 뒤 열립니다.</p>
+<p id="status" role="status" aria-live="polite">🔒 패스키로 보호된 영역</p>
+<section id="entry"><div class="grid"><form id="login-form"><h2>다시 오셨나요?</h2><p>가입할 때 정한 가상 계정 이름을 입력하세요.</p><label for="login-account">계정 이름</label><input id="login-account" required maxlength="32" pattern="[A-Za-z0-9_-]{1,32}" autocomplete="username webauthn" placeholder="Account-A"><button>패스키로 로그인</button></form>
+<form id="register-form"><h2>새 공간 만들기</h2><p>실명 대신 가상 이름을 사용하세요. 이름은 중복될 수 없습니다.</p><label for="new-account">새 계정 이름 (영문·숫자·_·-)</label><input id="new-account" required maxlength="32" pattern="[A-Za-z0-9_-]{1,32}" autocomplete="off" placeholder="Account-B"><label for="first-key">패스키 이름</label><input id="first-key" required maxlength="60" value="내 노트북"><button class="secondary">계정 만들고 패스키 등록</button></form></div><p class="hint">비공개 자료는 인증 후 서버에서 받아옵니다. 등록을 취소하면 계정과 패스키가 저장되지 않습니다.</p></section>
+<section id="authenticated" hidden><div class="section-top"><h2 id="account-title">내 공간</h2><button id="logout" class="secondary">로그아웃</button></div><div id="notes" class="notes"></div>
+<section class="management"><h2>등록된 패스키</h2><p>삭제하면 모든 기기에서 로그아웃됩니다. 남은 패스키로 다시 로그인하세요.</p><ul id="keys"></ul><form id="add-form"><label for="key-name">새 패스키 이름</label><input id="key-name" required maxlength="60" placeholder="내 휴대폰"><button>새 패스키 등록</button></form></section>
+<details><summary>Evidence · 서버 검증 기록</summary><p>challenge와 credential은 일부만 표시합니다. 세션 값과 개인키는 표시하지 않습니다.</p><button id="refresh-evidence" class="secondary">기록 새로고침</button><ul id="evidence"></ul></details></section>
+<aside><h2>패스키가 없으면?</h2><p>등록된 패스키가 0개인 계정은 로그인할 수 없습니다. 마지막 패스키를 삭제하면 복구할 수 없으므로, 먼저 두 번째 기기의 패스키를 등록하세요.</p></aside></main><footer>개인키는 기기에, 공개키는 서버에. 비밀번호 없는 WebAuthn 인증.</footer></body></html>

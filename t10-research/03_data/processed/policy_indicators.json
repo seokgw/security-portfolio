@@ -1,0 +1,62 @@
+[
+  {
+    "indicator": "간부와 소통",
+    "label_en": "Officer communication",
+    "year2020": 82.3,
+    "year2021": 83.7,
+    "difference_pp": 1.4,
+    "respondent_n": null,
+    "pdf_page": 11,
+    "printed_page": 8
+  },
+  {
+    "indicator": "외부와 소통",
+    "label_en": "Outside communication",
+    "year2020": 97.7,
+    "year2021": 97.9,
+    "difference_pp": 0.2,
+    "respondent_n": null,
+    "pdf_page": 11,
+    "printed_page": 8
+  },
+  {
+    "indicator": "병사 간 소통",
+    "label_en": "Peer communication",
+    "year2020": 85.9,
+    "year2021": 88.9,
+    "difference_pp": 3.0,
+    "respondent_n": null,
+    "pdf_page": 11,
+    "printed_page": 8
+  },
+  {
+    "indicator": "자기개발",
+    "label_en": "Self-development",
+    "year2020": 95.8,
+    "year2021": 95.9,
+    "difference_pp": 0.1,
+    "respondent_n": null,
+    "pdf_page": 11,
+    "printed_page": 8
+  },
+  {
+    "indicator": "심리적 안정",
+    "label_en": "Psychological stability",
+    "year2020": 96.6,
+    "year2021": 96.7,
+    "difference_pp": 0.1,
+    "respondent_n": null,
+    "pdf_page": 11,
+    "printed_page": 8
+  },
+  {
+    "indicator": "군 생활 만족도",
+    "label_en": "Service satisfaction",
+    "year2020": 95.1,
+    "year2021": 95.5,
+    "difference_pp": 0.4,
+    "respondent_n": null,
+    "pdf_page": 11,
+    "printed_page": 8
+  }
+]

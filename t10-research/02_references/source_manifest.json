@@ -1,0 +1,52 @@
+[
+  {
+    "file": "03_data/raw/korean_stress_2012.pdf",
+    "citation": "강성록, 고재원, 김용주 (2012). 군내 스트레스 분석을 통한 스트레스 진단 척도 개발 연구. 한국심리학회지: 일반, 31(2), 345–367.",
+    "url": null,
+    "collected_date": "2026-09-10",
+    "sha256": "7c92e221aa0ec9c79cac0e5495e9f367657bc4c17739636761cf8e6bc2de6022",
+    "bytes": 325450,
+    "verification": "사용자 Downloads의 KCI_FI001669257.pdf 복사; 첫 페이지와 표7·8 등 일부 원문 대조",
+    "reverified_date": "2026-09-11"
+  },
+  {
+    "file": "03_data/raw/mnd_evaluation.pdf",
+    "citation": "국방부 (2022.8). 성과관리 전략계획 (2022~2026).",
+    "url": "https://evaluation.go.kr/upload2/atch/eval/20230307141331481.pdf",
+    "collected_date": "2026-09-10",
+    "sha256": "edb1528ddebc72dff79a5c8b5cf7ccb3f3f868b941b262db3990ffcb7cc31d51",
+    "bytes": 1907023,
+    "verification": "PDF11쪽/인쇄8쪽 12개 집계값 원문 이미지 대조",
+    "reverified_date": "2026-09-11"
+  },
+  {
+    "file": "03_data/raw/hyun_2023.pdf",
+    "citation": "Hyun, S., Ku, X., Kang, S., Choi, Y., Ko, J., & Lee, H. (2023). Could Military Commanders’ Good Leadership Influence Subordinates’ Smartphone Overdependence? A Serial Mediation Analysis. International Journal of Mental Health Promotion, 25(11), 1187–1195. https://doi.org/10.32604/ijmhp.2023.030745",
+    "url": "https://file.techscience.com/files/ijmhp/2023/TSP_IJMHP-25-11/IntJMentHealthPromot-25-11-30745/IntJMentHealthPromot-25-30745.pdf",
+    "collected_date": "2026-09-10",
+    "sha256": "dbd52a95f8b57c52b1111f10b931c9433431ce41378b4c7bacd7a912e1855515",
+    "bytes": 609682,
+    "verification": "원문 방법·표1·한계 확인",
+    "reverified_date": "2026-09-11"
+  },
+  {
+    "file": "03_data/raw/pilot_2018.pdf",
+    "citation": "김형남, 방혜린. (2018.11.21). 병사 스마트폰 사용 시범 운용 실태 조사 보고서. 군인권센터.",
+    "url": "https://d3ku44620auzji.cloudfront.net/attachments/191015-165658/군인권센터·국방부-스마트폰조사보고서_181121.pdf",
+    "collected_date": "2026-09-10",
+    "sha256": "698f7c393e590fdc7ef1d09e71a4676ff67ee2b51e737c96380a56af015a8d2a",
+    "bytes": 7442304,
+    "verification": "2026-09-11 표지 포함 11쪽 전부 이미지 판독. 조사자와 작성자 구분. 전체 면담 N 미보고.",
+    "reverified_date": "2026-09-11"
+  },
+  {
+    "file": "03_data/raw/policy_2020.html",
+    "citation": "문화체육관광부 국민소통실 (2020.7.1). [정책달력] 7월부터 달라집니다! 대한민국 정책브리핑.",
+    "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148874154",
+    "collected_date": "2026-09-10",
+    "sha256": "a58424b7b637a2e534054952901cee2f161b313a45b30ee799e221cea67a70cf",
+    "bytes": 168265,
+    "verification": "정책 시행일 확인 및 페이지 저장",
+    "reverified_date": "2026-09-11"
+  }
+]

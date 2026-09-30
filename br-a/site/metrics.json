@@ -1,0 +1,85 @@
+{
+  "after_setback_close": 27,
+  "assignments": {
+    "source": "TODO: 사용자 확인 필요 — 공식 제출 현황 미제공",
+    "status": "unconfirmed",
+    "total": null
+  },
+  "attendance": {
+    "source": "TODO: 사용자 확인 필요 — 실제 출석 기록 미제공",
+    "status": "unconfirmed",
+    "total": null
+  },
+  "close_count": 32,
+  "counting_rule": "날짜별 비어 있지 않은 open/close를 각 1건 집계. 줄 수가 아님. 강점 행동은 자기보고.",
+  "last_setback": "2026-08-18",
+  "missing_close_dates": [
+    "2026-09-30"
+  ],
+  "not_practiced": 1,
+  "open_count": 33,
+  "partial": 1,
+  "period": "2026-08-11~2026-09-30",
+  "practiced": 30,
+  "record_days": 33,
+  "repeated_actions": [
+    {
+      "date_count": 18,
+      "text": "쉬는시간마다 리추얼 내용을 확인했다."
+    },
+    {
+      "date_count": 2,
+      "text": "쉬는시간마다 리추얼 페이지를 확인했다."
+    },
+    {
+      "date_count": 1,
+      "text": "모르는 것에 대해 인지를 한 순간 검색엔진을 통해 빨리 찾아봤다."
+    },
+    {
+      "date_count": 1,
+      "text": "쉬는 시간마다 리추얼 내용을 확인했다."
+    },
+    {
+      "date_count": 1,
+      "text": "쉬는 시간마다 텀블러에 물을 새로 받아왔다."
+    },
+    {
+      "date_count": 1,
+      "text": "쉬는시간마다 리추얼 내용 확인했다."
+    },
+    {
+      "date_count": 1,
+      "text": "쉬는시간마다 리추얼 내용 확인했습니다."
+    },
+    {
+      "date_count": 1,
+      "text": "쉬는시간마다 리추얼 내용을 생각했다."
+    },
+    {
+      "date_count": 1,
+      "text": "쉬는시간마다 리추얼 내용을 확인했다"
+    },
+    {
+      "date_count": 1,
+      "text": "쉬는시간마다 상기하려고 노력했다."
+    },
+    {
+      "date_count": 1,
+      "text": "쉬는시간마다 아침 리추얼 내용을 확인했다."
+    },
+    {
+      "date_count": 1,
+      "text": "쉬는시간마다 점검했다."
+    },
+    {
+      "date_count": 1,
+      "text": "쉬는시간에 리추얼 내용을 확인했다."
+    },
+    {
+      "date_count": 1,
+      "text": "집중력이 끊어지지 않도록 계속해서 심호흡하면서 상기했다."
+    }
+  ],
+  "source": "ritual-history.json / days",
+  "unclassified_close": 0
+}

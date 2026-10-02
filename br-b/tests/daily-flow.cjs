@@ -6,7 +6,7 @@ const assert = require('node:assert/strict');
   const page = await context.newPage();
   const pageErrors=[];page.on('pageerror',e=>pageErrors.push(e.message));
   const records = new Map(); let failSave=true;
-  await page.route('**/cloud-client.js',route=>route.fulfill({contentType:'text/javascript',body:`
+  await page.route('**/cloud-client.js*',route=>route.fulfill({contentType:'text/javascript',body:`
     window.createBRBCloud=async callback=>{
       window.testAuthCallback=callback;
       return {login:async()=>callback({id:'fixture-user'}),logout:async()=>callback(null),

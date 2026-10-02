@@ -4,5 +4,12 @@
   "items_checked": 342,
   "findings": [],
   "scope": "BR-A public site and nested ZIP/DOCX; BR-B source, README, submission and execution ZIP",
-  "limitations": "Korean personal names and unit identifiers require contextual manual review; keyword mentions do not imply real secrets."
+  "limitations": "Korean personal names and unit identifiers require contextual manual review; keyword mentions do not imply real secrets.",
+  "db_extension": {
+    "result": "PASS",
+    "scope": "Planned source/document files and execution ZIP; actual local credential comparison",
+    "secret_findings": [],
+    "public_key": "New BR-B project publishable key intentionally included; old project key excluded",
+    "auth": "GitHub identity is handled by Supabase Auth; app screen and CSV omit email/name"
+  }
 }

@@ -1,0 +1,20 @@
+const { chromium } = require('C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const assert = require('node:assert/strict');
+(async()=>{
+ const browser=await chromium.launch({channel:'msedge',headless:true});
+ const context=await browser.newContext(); const page=await context.newPage(); const errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('https://seokgw.github.io/security-portfolio/br-b/');
+ await page.waitForFunction(()=>!document.getElementById('login').disabled,{},{timeout:45000});
+ assert.equal(await page.locator('#purposes input').count(),9);
+ assert.equal(await page.locator('#factors input').count(),14);
+ await page.locator('#hours').fill('2.5');await page.getByLabel('학습·자기개발',{exact:true}).check();
+ await page.locator('#frequency').selectOption({label:'주 1~2일'});await page.locator('#stress').selectOption('보통');
+ await page.getByRole('button',{name:'3. 결과 확인'}).click();
+ assert.equal(await page.locator('#result').isVisible(),true);assert.equal(await page.locator('#save').isEnabled(),false);
+ assert.match(await page.locator('#result-content').innerText(),/학습·자기개발/);
+ await page.setViewportSize({width:390,height:844});
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+ assert.deepEqual(errors,[]);
+ await context.close();await browser.close();console.log('PASS public guest: actual SDK ready, expanded fields, result without login, save gated, mobile width, no JS errors.');
+})().catch(e=>{console.error(e);process.exitCode=1});

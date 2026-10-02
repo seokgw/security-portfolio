@@ -1,4 +1,6 @@
 .env
+br-b/.private/
+br-b/tests/screenshots/
 node_modules/
 .pnpm-store/
 .env.local

@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-02",
+  "status": "PASS",
+  "method": "Playwright Edge fresh isolated non-persistent browser context; no cookies or authentication; headless incognito-equivalent, not a visible Ctrl+Shift+N window",
+  "urls": [
+    "https://seokgw.github.io/security-portfolio/br-a/site/",
+    "https://seokgw.github.io/security-portfolio/br-a/site/paper.html",
+    "https://seokgw.github.io/security-portfolio/br-b/"
+  ],
+  "checks": [
+    "portfolio to paper",
+    "portfolio to app",
+    "three user actions and result",
+    "invalid inputs: empty,-1,abc,25",
+    "no login or challenge encountered"
+  ],
+  "pageErrors": []
+}

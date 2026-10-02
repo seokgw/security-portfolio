@@ -6,6 +6,7 @@ const assert = require('node:assert/strict');
  page.on('pageerror',e=>errors.push(e.message));
  await page.goto('https://seokgw.github.io/security-portfolio/br-b/');
  await page.waitForFunction(()=>!document.getElementById('login').disabled,{},{timeout:45000});
+ assert.equal(await page.locator('#login-google').isEnabled(),true);
  assert.equal(await page.locator('#purposes input').count(),9);
  assert.equal(await page.locator('#factors input').count(),14);
  await page.locator('#hours').fill('2.5');await page.getByLabel('학습·자기개발',{exact:true}).check();

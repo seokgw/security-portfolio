@@ -9,7 +9,7 @@ const assert = require('node:assert/strict');
   await page.route('**/cloud-client.js*',route=>route.fulfill({contentType:'text/javascript',body:`
     window.createBRBCloud=async callback=>{
       window.testAuthCallback=callback;
-      return {login:async()=>callback({id:'fixture-user'}),logout:async()=>callback(null),
+      return {login:async(provider)=>{window.testLastProvider=provider;callback({id:'fixture-user'})},logout:async()=>callback(null),
         list:async()=>{const r=await fetch('/fixture-records');return r.json()},
         save:async(record,expectedUpdatedAt)=>{const r=await fetch('/fixture-records',{method:'POST',body:JSON.stringify({record,expectedUpdatedAt})});const data=await r.json();if(!r.ok)throw Error(data.error);return data.updatedAt;}};
     };`}));
@@ -55,6 +55,15 @@ const assert = require('node:assert/strict');
   await page.setViewportSize({width:390,height:844});
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   await page.locator('#logout').click();assert.equal(await page.locator('#history-rows tr').count(),0);
+  assert.equal(await page.locator('#login-google').isVisible(),true);
+  await page.locator('#login-google').click();
+  await page.waitForFunction(()=>document.getElementById('history-rows').children.length===2);
+  assert.equal(await page.evaluate(()=>window.testLastProvider),'google');
+  assert.equal(await page.locator('#login').isVisible(),false);
+  assert.equal(await page.locator('#login-google').isVisible(),false);
+  await page.locator('#logout').click();
+  await page.locator('#login').click();
+  assert.equal(await page.evaluate(()=>window.testLastProvider),'github');
   assert.deepEqual(pageErrors,[]);
   console.log('PASS mocked DB: expanded fields, guest result, failed save, daily create/update, comparison, stale input, invalid date/sleep, cache-clear recovery, logout isolation, mobile width. Actual Supabase/RLS/OAuth not tested.');
   await browser.close();

@@ -71,7 +71,7 @@
     if (current.factor.includes(6) || current.factor.includes(7)) section("생활 환경 돌아보기", ["업무·훈련 부담이나 주변 환경 때문에 쉬기 어려웠다고 선택했습니다. 휴대전화 사용과 구분해 함께 살펴보세요."]);
     if (daily.timeOfUse === "취침 전" && current.factor.includes(5)) section("사용 시간대 돌아보기", ["취침 전 사용과 수면·일상 방해를 함께 선택했습니다. 다음 기록에서 사용 시간대와 수면시간을 함께 비교해 보세요."]);
     compare(current); updateSave();
-    if (!user) $("save-status").textContent = "결과 확인은 완료됐습니다. 날짜별 DB 저장은 GitHub 로그인 후 사용할 수 있습니다.";
+    if (!user) $("save-status").textContent = "결과 확인은 완료됐습니다. 날짜별 DB 저장은 Google 또는 GitHub 로그인 후 사용할 수 있습니다.";
   });
   function invalidate() { current = null; updateSave(); if (!$("result").hidden) $("save-status").textContent = "입력이 변경됐습니다. 결과 확인을 다시 눌러 주세요."; }
   form.addEventListener("input", invalidate); form.addEventListener("change", invalidate);
@@ -109,8 +109,9 @@
   }
   function authChanged(nextUser) {
     const same = nextUser?.id && nextUser.id === user?.id; user = nextUser;
-    $("login").hidden = Boolean(user); $("logout").hidden = $("reload-records").hidden = !user;
-    $("auth-status").textContent = user ? "GitHub 로그인 완료 · 저장 기록은 본인 계정에서만 조회합니다." : "점검은 바로 할 수 있습니다. DB 저장·조회에는 GitHub 로그인이 필요합니다.";
+    $("login").disabled = $("login-google").disabled = !cloud;
+    $("login").hidden = $("login-google").hidden = Boolean(user); $("logout").hidden = $("reload-records").hidden = !user;
+    $("auth-status").textContent = user ? "로그인 완료 · 저장 기록은 본인 계정에서만 조회합니다." : "점검은 바로 할 수 있습니다. DB 저장·조회에는 Google 또는 GitHub 로그인이 필요합니다.";
     if (!same) { ++loadEpoch; records = []; owner = null; loading = false; renderHistory(); $("storage-status").textContent = ""; }
     if (user && !same) loadRecords();
     if (!user) { $("result").hidden = true; current = null; updateSave(); }
@@ -123,12 +124,19 @@
       const updatedAt = await cloud.save(snapshot, existing?.updatedAt);
       if (user?.id !== id) return;
       records = [...records.filter(r => r.date !== snapshot.date), { ...snapshot, updatedAt }].sort((a,b) => a.date.localeCompare(b.date));
-      $("save-status").textContent = `${snapshot.date} 기록을 DB에 ${existing ? "수정" : "저장"}했습니다. 같은 GitHub 계정으로 다시 불러올 수 있습니다.`;
+      $("save-status").textContent = `${snapshot.date} 기록을 DB에 ${existing ? "수정" : "저장"}했습니다. 같은 로그인 계정으로 다시 불러올 수 있습니다.`;
     } catch (error) { if (user?.id === id) $("save-status").textContent = error.message; }
     finally { saving = false; renderHistory(); }
   });
   $("reload-records").addEventListener("click", loadRecords);
-  $("login").addEventListener("click", async () => { if (!cloud) return; $("login").disabled = true; try { await cloud.login(); } catch (error) { $("auth-status").textContent = error.message; $("login").disabled = false; } });
+  [["login", "github"], ["login-google", "google"]].forEach(([id, provider]) => {
+    $(id).addEventListener("click", async () => {
+      if (!cloud) return;
+      $("login").disabled = $("login-google").disabled = true;
+      try { await cloud.login(provider); }
+      catch (error) { $("auth-status").textContent = error.message; $("login").disabled = $("login-google").disabled = false; }
+    });
+  });
   $("logout").addEventListener("click", async () => { if (!cloud || saving) return; try { await cloud.logout(); authChanged(null); } catch (error) { $("auth-status").textContent = error.message; } });
   $("export").addEventListener("click", () => {
     const rows = [["날짜", "사용시간", "사용목적", "평소 소통 빈도", ...fields.map(def => def.label), "환경 요소"], ...records.map(r => [r.date, r.hours, r.purpose.map(i => purposes[i]).join(" / "), r.frequency, ...fields.map(def => r.daily[def.id] ?? ""), r.factor.map(i => factors[i]).join(" / ")])];
@@ -137,8 +145,8 @@
   });
   renderHistory();
   window.createBRBCloud(authChanged).then(client => {
-    cloud = client; $("login").disabled = !client;
-    if (!client) $("auth-status").textContent = location.protocol === "file:" ? "ZIP에서는 점검 결과를 확인할 수 있습니다. GitHub 로그인과 날짜별 DB 저장은 공개 앱에서 사용해 주세요." : "DB 연결 설정이 아직 완료되지 않았습니다. 점검 결과는 사용할 수 있으나 날짜별 저장은 아직 지원되지 않습니다.";
+    cloud = client; $("login").disabled = $("login-google").disabled = !client;
+    if (!client) $("auth-status").textContent = location.protocol === "file:" ? "ZIP에서는 점검 결과를 확인할 수 있습니다. Google·GitHub 로그인과 날짜별 DB 저장은 공개 앱에서 사용해 주세요." : "DB 연결 설정이 아직 완료되지 않았습니다. 점검 결과는 사용할 수 있으나 날짜별 저장은 아직 지원되지 않습니다.";
     updateSave();
   }).catch(() => { $("auth-status").textContent = "DB 연결을 시작하지 못했습니다. 점검은 사용할 수 있으며 저장은 연결 복구 후 가능합니다."; });
 })();

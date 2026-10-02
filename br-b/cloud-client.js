@@ -16,14 +16,15 @@ window.createBRBCloud = async function (onAuthChange) {
   });
   async function requireUser() {
     const { data, error } = await client.auth.getUser();
-    if (error || !data.user) throw new Error("GitHub로 로그인한 뒤 다시 시도해 주세요.");
+    if (error || !data.user) throw new Error("로그인한 뒤 다시 시도해 주세요.");
     return data.user;
   }
   return {
-    async login() {
+    async login(provider = "github") {
+      if (!["github", "google"].includes(provider)) throw new Error("지원하지 않는 로그인 방식입니다.");
       const redirectTo = location.origin + location.pathname;
-      const { error } = await client.auth.signInWithOAuth({ provider: "github", options: { redirectTo } });
-      if (error) throw new Error("GitHub 로그인 연결에 실패했습니다. 잠시 뒤 다시 시도해 주세요.");
+      const { error } = await client.auth.signInWithOAuth({ provider, options: { redirectTo } });
+      if (error) throw new Error("로그인 연결에 실패했습니다. 잠시 뒤 다시 시도해 주세요.");
     },
     async logout() {
       const { error } = await client.auth.signOut({ scope: "local" });

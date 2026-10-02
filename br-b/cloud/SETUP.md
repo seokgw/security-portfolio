@@ -24,6 +24,6 @@
 
 ## Google 로그인 추가 준비
 
-Google Cloud 전용 프로젝트: BR-B Login (`lively-tensor-510403-j6`). Google과 GitHub 로그인 버튼을 함께 제공하며, 동일한 Supabase 사용자 ID에 기록을 연결한다. Google OAuth 등록·연결 검증은 진행 중이다.
+Google Cloud 전용 프로젝트: BR-B Login (`lively-tensor-510403-j6`). Google과 GitHub 로그인 버튼을 함께 제공하며, 동일한 Supabase 사용자 ID에 기록을 연결한다. Google OAuth 등록·Supabase 연결·프로덕션 게시를 완료했다. 실제 Google 기본 프로필·이메일 동의 후 앱 복귀와 로그인 완료·DB 목록 조회를 확인했다. GitHub 공급자도 활성화 상태를 유지한다.
 
 동일한 확인된 이메일의 OAuth 식별자는 Supabase 자동 계정 연결 대상이 될 수 있다. 다른 이메일은 별도 계정이므로 기존 기록이 보이지 않을 때는 원래 로그인 계정을 사용한다. 수동 계정 연결 설정은 변경하지 않는다.

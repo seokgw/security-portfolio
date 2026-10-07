@@ -1,4 +1,16 @@
-# 플랜두씨 다이어리 2 — JWT 인증 + MariaDB
+# 플랜두씨 다이어리 — GitHub Pages + Supabase
+
+## 공개 운영 구조
+
+- 화면: GitHub Pages (`pds-diary/public/`)
+- 인증·저장: Supabase Auth + PostgreSQL
+- 접근 제어: `pds_user_data` 테이블의 RLS 정책으로 본인 행만 조회·저장
+- 공개 브라우저 설정: `public/config.js`의 publishable key만 사용
+- 관리용 키와 DB 비밀번호는 공개 코드에 포함하지 않음
+
+기존 Express 서버 코드는 구현 기록과 로컬 재현을 위해 보존합니다. 현재 공개 앱은 Railway의 `/api/*` 서버에 의존하지 않습니다.
+
+## 기존 서버 구현
 
 MCP 서버 구축 과정을 **Plan → Do → See**로 연결해 기록하는 개인 웹 다이어리입니다. JWT와 서버측 세션을 검증한 뒤 본인 소유 데이터만 MariaDB에서 제공합니다. 과제 7 상세 문서는 [`docs/assignment7/AUTH_IMPLEMENTATION.md`](docs/assignment7/AUTH_IMPLEMENTATION.md)에 있습니다.
 

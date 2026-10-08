@@ -1,0 +1,9 @@
+{
+  "name": "jigwan-note",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node --check app.js && node --check cloud-entry.js && node --check scripts/build.mjs"
+  }
+}

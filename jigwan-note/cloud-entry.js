@@ -11,12 +11,28 @@
   const submitButton = document.getElementById('authSubmit');
   const nativeStorage = window.localStorage;
   const memory = new Map();
+  const welcome=document.getElementById('welcomePage'),mobileNav=document.getElementById('mobileNav');
+  window.JIGWAN_DEMO=false;
+  const sampleRecords=[
+    {id:'sample-1',gameDate:'2026-09-20',stadium:'잠실야구장',favoriteTeam:'LG 트윈스',opponentTeam:'두산 베어스',favoriteScore:5,opponentScore:3,result:'win',seat:'1루 블루석',review:'마지막 아웃까지 함께 외쳤던 하루. 다음 직관도 꼭 기록해야지!',photos:[],createdAt:'2026-09-20T12:00:00Z'},
+    {id:'sample-2',gameDate:'2026-09-12',stadium:'고척스카이돔',favoriteTeam:'LG 트윈스',opponentTeam:'키움 히어로즈',favoriteScore:2,opponentScore:4,result:'loss',seat:'3루 내야석',review:'결과는 아쉬웠지만 친구와 함께한 응원은 최고였다.',photos:[],createdAt:'2026-09-12T12:00:00Z'},
+    {id:'sample-3',gameDate:'2026-08-30',stadium:'잠실야구장',favoriteTeam:'LG 트윈스',opponentTeam:'삼성 라이온즈',favoriteScore:6,opponentScore:1,result:'win',seat:'외야석',review:'노을을 보며 즐긴 경기. 올해의 기억에 남는 직관!',photos:[],createdAt:'2026-08-30T12:00:00Z'}
+  ];
   let client, user=null, signUpMode=false, runtimeStarted=false, lastUserId=null, mutation=0;
   let writeQueue=Promise.resolve(), refreshQueue=Promise.resolve();
 
   function showMessage(text,isError=false){authMessage.textContent=text;authMessage.classList.toggle('is-error',isError);authMessage.hidden=!text;}
-  function showGate(text,isError=false){gate.hidden=false;appShell.hidden=true;showMessage(text,isError);}
-  function enterApp(){gate.hidden=true;appShell.hidden=false;document.getElementById('accountEmail').textContent=user.email||'내 계정';}
+  function closeDialogs(){document.getElementById('editorDialog').close();document.getElementById('detailDialog').close();}
+  function showWelcome(){closeDialogs();welcome.hidden=false;gate.hidden=true;appShell.hidden=true;mobileNav.hidden=true;window.JIGWAN_DEMO=false;memory.delete(KEY);document.dispatchEvent(new CustomEvent('jigwan-records-loaded',{detail:[]}));}
+  function showGate(text,isError=false){closeDialogs();welcome.hidden=true;gate.hidden=false;appShell.hidden=true;mobileNav.hidden=true;showMessage(text,isError);}
+  function enterApp(){welcome.hidden=true;gate.hidden=true;appShell.hidden=false;mobileNav.hidden=false;document.getElementById('demoBanner').hidden=!window.JIGWAN_DEMO;document.getElementById('demoHomeButton').hidden=!window.JIGWAN_DEMO;document.getElementById('signOutButton').hidden=window.JIGWAN_DEMO;document.getElementById('accountEmail').textContent=window.JIGWAN_DEMO?'샘플 체험':user.email||'내 계정';}
+  function startRuntime(records){memory.set(KEY,JSON.stringify(records));if(!runtimeStarted){runtimeStarted=true;const script=document.createElement('script');script.src='app.js';script.onload=()=>document.dispatchEvent(new CustomEvent('jigwan-records-loaded',{detail:JSON.parse(memory.get(KEY)||'[]')}));script.onerror=()=>{runtimeStarted=false;showGate('화면을 불러오지 못했어요. 새로고침 후 다시 시도해 주세요.',true);};document.body.appendChild(script);}else document.dispatchEvent(new CustomEvent('jigwan-records-loaded',{detail:records}));}
+  document.getElementById('startDemoButton').addEventListener('click',()=>{if(user){window.JIGWAN_DEMO=false;enterApp();return;}window.JIGWAN_DEMO=true;enterApp();startRuntime(sampleRecords.map(r=>({...r,photos:[]})));});
+  function requestLogin(){window.JIGWAN_DEMO=false;memory.delete(KEY);showGate('기록과 사진을 안전하게 보관하려면 로그인해 주세요. 기존 plan-do-see 계정도 사용할 수 있어요.');}
+  document.addEventListener('click',event=>{if(event.target.closest('[data-start-login]'))requestLogin();});
+  document.addEventListener('jigwan-request-login',requestLogin);
+  document.getElementById('backToWelcome').addEventListener('click',showWelcome);
+  document.getElementById('demoHomeButton').addEventListener('click',showWelcome);
   function errorText(error){const raw=error?.message||'요청을 완료하지 못했습니다.';if(/Invalid login credentials/i.test(raw))return'이메일 또는 비밀번호를 확인해 주세요.';if(/Email not confirmed/i.test(raw))return'이메일 인증을 완료한 뒤 로그인해 주세요.';if(/already registered/i.test(raw))return'이미 가입된 이메일입니다. 로그인해 주세요.';return raw;}
   function authErrorText(error){
     const code=error?.code||'',raw=error?.message||'';
@@ -41,12 +57,12 @@
       const photoUrls=await Promise.all(photos.map(async photo=>{const{data,error:urlError}=await client.storage.from(BUCKET).createSignedUrl(photo.path,3600);if(urlError)throw urlError;return{...photo,src:data.signedUrl,urlExpiresAt:Date.now()+3600000};}));saved.push({...record,photos:photoUrls});}
     for(const[id,previous]of existing){if(incomingIds.has(id))continue;const{error}=await client.schema('jigwan').from('jigwan_watch_records').delete().eq('id',id);if(error)throw error;const paths=(previous.photos||[]).map(photo=>photo.path).filter(Boolean);if(paths.length){const{error:removeError}=await client.storage.from(BUCKET).remove(paths);if(removeError)throw removeError;}}
     if(thisMutation===mutation)memory.set(KEY,JSON.stringify(saved));}
-  async function startSession(session){const sessionUser=session?.user;if(!sessionUser){user=null;showGate('plan-do-see 계정이 있다면 같은 이메일과 비밀번호로 로그인해 주세요.');return;}user=sessionUser;try{const records=await loadRecords();if(user?.id!==sessionUser.id)return;enterApp();if(!runtimeStarted){runtimeStarted=true;const script=document.createElement('script');script.src='app.js';script.onload=()=>document.dispatchEvent(new CustomEvent('jigwan-records-loaded',{detail:records}));document.body.appendChild(script);}else document.dispatchEvent(new CustomEvent('jigwan-records-loaded',{detail:records}));}catch(error){if(user?.id===sessionUser.id){user=null;showGate('로그인은 완료됐지만 기록을 불러오지 못했어요. 잠시 후 다시 로그인해 주세요.',true);console.error('직관 기록 조회 실패:',error);}}}
+  async function startSession(session){const sessionUser=session?.user;if(!sessionUser){user=null;return;}user=sessionUser;try{const records=await loadRecords();if(user?.id!==sessionUser.id)return;window.JIGWAN_DEMO=false;enterApp();startRuntime(records);}catch(error){if(user?.id===sessionUser.id){user=null;showGate('로그인은 완료됐지만 기록을 불러오지 못했어요. 잠시 후 다시 로그인해 주세요.',true);console.error('직관 기록 조회 실패:',error);}}}
 
   // 직관 기록은 메모리에만 저장하고, 레코드는 Supabase DB에 저장합니다.
   Object.defineProperty(window,'localStorage',{configurable:true,value:{
     getItem(key){return key===KEY?(memory.get(key)??null):nativeStorage.getItem(key);},
-    setItem(key,value){if(key!==KEY)return nativeStorage.setItem(key,value);memory.set(key,String(value));if(user){const ownerId=user.id,snapshot=String(value);writeQueue=writeQueue.then(()=>persistSnapshot(snapshot,ownerId)).then(()=>document.dispatchEvent(new Event('jigwan-cloud-saved'))).catch(error=>{console.error('클라우드 기록 저장 실패:',error);document.dispatchEvent(new CustomEvent('jigwan-cloud-error',{detail:errorText(error)}));});}},
+    setItem(key,value){if(key!==KEY)return nativeStorage.setItem(key,value);memory.set(key,String(value));if(user&&!window.JIGWAN_DEMO){const ownerId=user.id,snapshot=String(value);writeQueue=writeQueue.then(()=>persistSnapshot(snapshot,ownerId)).then(()=>document.dispatchEvent(new Event('jigwan-cloud-saved'))).catch(error=>{console.error('클라우드 기록 저장 실패:',error);document.dispatchEvent(new CustomEvent('jigwan-cloud-error',{detail:errorText(error)}));});}},
     removeItem(key){if(key===KEY)memory.delete(KEY);else nativeStorage.removeItem(key);},clear(){memory.delete(KEY);nativeStorage.clear();}
   }});
 

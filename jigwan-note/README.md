@@ -7,7 +7,7 @@ GitHub/Vercel 배포 설정은 [DEPLOYMENT.md](DEPLOYMENT.md)를 확인하세요
 ## Supabase 연결/실행
 
 1. Supabase 프로젝트를 생성합니다.
-2. 대시보드의 SQL Editor에서 `supabase-schema.sql` 전체를 실행합니다. 계정별 RLS가 적용된 `watch_records`와 비공개 `watch-photos` bucket 및 정책이 만들어집니다.
+2. 대시보드의 SQL Editor에서 `supabase-schema.sql` 전체를 실행합니다. 계정별 RLS가 적용된 `jigwan_watch_records`와 비공개 `jigwan-watch-photos` bucket 및 정책이 만들어집니다.
 3. Project Settings → API의 Project URL과 anon/public key를 `supabase-config.js`의 `url`, `anonKey`에 설정합니다. **service_role 키는 브라우저 파일에 절대 넣지 마세요.** `supabase-config.js`의 빈 값은 프로젝트에서 직접 채워야 합니다.
 4. Supabase Authentication 이메일 로그인을 사용 설정하고 Site URL/Redirect URLs에 배포 주소를 등록합니다. 이메일 확인이 켜져 있으면 인증 후 로그인해야 합니다.
 5. `index.html`, `styles.css`, `account.css`, `app.js`, `cloud-entry.js`, `supabase-config.js`를 HTTPS 정적 호스팅에 배포합니다. `file://`보다 로컬 웹 서버/호스팅을 권장합니다.

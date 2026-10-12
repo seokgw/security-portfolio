@@ -42,7 +42,7 @@
 
 ## 6. 확정된 선택
 - Supabase Auth + PostgreSQL 사용
-- `watch_records` 테이블의 사용자별 RLS로 계정 간 기록 격리
+- `jigwan_watch_records` 테이블의 사용자별 RLS로 계정 간 기록 격리
 - private Storage bucket에 사진을 보관
 - 팀 이름은 자유 입력. 응원 팀 미지정은 결과 직접 선택/점수 미입력. 응원 팀 지정 시 양쪽 점수를 같이 입력하거나 모두 생략하며, 점수 입력 시 결과와 일치해야 함.
 - 프런트엔드에는 공개 anon key만 사용하고 service_role 키를 넣지 않음

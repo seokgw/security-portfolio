@@ -7,7 +7,7 @@
 3. Build Command: `npm run build`, Output Directory: `dist`.
 4. 기존 Supabase `aleph-plan-do-see` 프로젝트를 재사용합니다. 직관노트는 `jigwan_watch_records`와 비공개 `jigwan-watch-photos`만 사용합니다. 로그인 계정(Auth)은 프로젝트 내 다른 앱과 공유합니다.
 5. Vercel 환경변수 `SUPABASE_URL`, `SUPABASE_ANON_KEY`를 설정합니다. publishable 또는 anon 키만 사용합니다. service_role/secret 키는 사용하지 않습니다.
-6. 배포 후 Supabase Authentication URL Configuration의 Site URL과 Redirect URLs에 실제 HTTPS 배포 주소를 등록합니다.
+6. Supabase Redirect URLs에 `https://jigwan-note.vercel.app/`을 추가했습니다. 기존 Site URL과 다른 앱의 Redirect URL은 유지합니다. 회원가입은 직관노트 주소를 명시적으로 전달합니다.
 7. 이메일 가입/인증/로그인, 기록 등록/수정/삭제, 사진 업로드/조회/삭제, 재로그인 후 유지, 두 계정 간 격리를 검증합니다.
 
 빌드는 공개 웹 파일 여섯 개만 `dist`에 복사합니다. SQL, 문서, 환경변수 원본은 배포하지 않습니다. 환경변수가 없으면 빌드를 실패시켜 미연결 앱의 배포를 방지합니다.
@@ -19,6 +19,10 @@
 - 기존 프로젝트에 직관노트 테이블과 사진 저장소, 사용자별 RLS 정책 8개를 적용했습니다. 기존 plan-do-see 테이블과 정책을 유지했습니다.
 - 새 Supabase 프로젝트 또는 유료 리소스를 생성하지 않았습니다.
 - Vercel `jigwan-note` 프로젝트를 GitHub 저장소에 연결하고 공개 Supabase URL/키를 설정했습니다.
-- 실제 브라우저 CRUD, 사진, 계정 격리 검증은 아직 수행하지 않았습니다.
+- 공개 주소: https://jigwan-note.vercel.app/ (Vercel production).
+- 공개 로그인 화면과 Supabase 설정 로드를 확인했습니다.
+- DB 트랜잭션 테스트로 계정 간 조회/수정/삭제와 타인 명의 등록 차단을 검증했고 테스트 데이터는 롤백했습니다.
+- 브라우저에서 실제 회원가입·이메일 인증·CRUD·사진 업로드는 아직 검증하지 않았습니다.
+- 기존 앱의 테이블 10개에는 RLS가 비활성화되어 있어 별도 보안 조치가 필요합니다. 기존 앱에 영향을 주므로 이번 작업에서는 변경하지 않았습니다.
 
 설정 근거: [Vercel 구성](https://vercel.com/docs/project-configuration/vercel-json), [Supabase RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [Storage 접근 제어](https://supabase.com/docs/guides/storage/security/access-control).

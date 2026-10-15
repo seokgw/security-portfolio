@@ -1,0 +1,55 @@
+[
+  {
+    "url": "https://evaluation.go.kr/upload2/atch/eval/20230307141331481.pdf",
+    "date": "2026-09-11",
+    "method": "Fresh nonpersistent browser context for every URL, no storage state or login",
+    "passed": true,
+    "status": 200,
+    "final_url": "https://evaluation.go.kr/upload2/atch/eval/20230307141331481.pdf",
+    "bytes": 1907023,
+    "pdf_signature": true,
+    "navigation_status": 200,
+    "navigation_type": "application/pdf",
+    "download_triggered": false,
+    "pdf_embeds": 1
+  },
+  {
+    "url": "https://file.techscience.com/files/ijmhp/2023/TSP_IJMHP-25-11/IntJMentHealthPromot-25-11-30745/IntJMentHealthPromot-25-30745.pdf",
+    "date": "2026-09-11",
+    "method": "Fresh nonpersistent browser context for every URL, no storage state or login",
+    "passed": true,
+    "status": 200,
+    "final_url": "https://file.techscience.com/files/ijmhp/2023/TSP_IJMHP-25-11/IntJMentHealthPromot-25-11-30745/IntJMentHealthPromot-25-30745.pdf",
+    "bytes": 609682,
+    "pdf_signature": true,
+    "navigation_status": 200,
+    "navigation_type": "application/pdf",
+    "download_triggered": false,
+    "pdf_embeds": 1
+  },
+  {
+    "url": "https://d3ku44620auzji.cloudfront.net/attachments/191015-165658/군인권센터·국방부-스마트폰조사보고서_181121.pdf",
+    "date": "2026-09-11",
+    "method": "Fresh nonpersistent browser context for every URL, no storage state or login",
+    "passed": true,
+    "status": 200,
+    "final_url": "https://d3ku44620auzji.cloudfront.net/attachments/191015-165658/%EA%B5%B0%EC%9D%B8%EA%B6%8C%EC%84%BC%ED%84%B0%C2%B7%EA%B5%AD%EB%B0%A9%EB%B6%80-%EC%8A%A4%EB%A7%88%ED%8A%B8%ED%8F%B0%EC%A1%B0%EC%82%AC%EB%B3%B4%EA%B3%A0%EC%84%9C_181121.pdf",
+    "bytes": 7442304,
+    "pdf_signature": true,
+    "navigation_note": "page.goto: Download is starting\nCall log:\n\u001b[2m  - navigating to \"https://d3ku44620auzji.cloudfront.net/attachments/191015-165658/%EA%B5%B0%EC%9D%B8%EA%B6%8C%EC%84%BC%ED%84%B0%C2%B7",
+    "download_triggered": true,
+    "pdf_embeds": 0
+  },
+  {
+    "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148874154",
+    "date": "2026-09-11",
+    "method": "Fresh nonpersistent browser context for every URL, no storage state or login",
+    "passed": true,
+    "status": 200,
+    "final_url": "https://www.korea.kr/news/policyNewsView.do?newsId=148874154",
+    "bytes": 167968,
+    "title": "[정책달력] 7월부터 달라집니다! - 정책뉴스 | 뉴스 | 대한민국 정책브리핑",
+    "content_confirmed": true,
+    "challenge": false
+  }
+]

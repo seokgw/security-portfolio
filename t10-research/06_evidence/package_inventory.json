@@ -1,0 +1,197 @@
+[
+  {
+    "file": "01_paper/paper.docx",
+    "bytes": 94142,
+    "sha256": "07f5a865834a3c9805854c45c3376a233d68bd6c5a8bf5c3bbf5bb01bb37dc43"
+  },
+  {
+    "file": "01_paper/paper.md",
+    "bytes": 20058,
+    "sha256": "c0460d3d22532437499f2772a78ef40a762aa99b392dfc436befa1176c9cd0fc"
+  },
+  {
+    "file": "01_paper/paper.pdf",
+    "bytes": 2046840,
+    "sha256": "6ef5bfd7fd6389378ac8391e6cd2f7ce664224beced326086460114122dee664"
+  },
+  {
+    "file": "02_references/excluded_references.md",
+    "bytes": 1565,
+    "sha256": "769426f8225a24d02a614bb7ba3ddaadfb66b2bf9d580f939c7a662fbe30afd4"
+  },
+  {
+    "file": "02_references/references.md",
+    "bytes": 2949,
+    "sha256": "4466479d35e61aa6b4a206bc079a88461e95a7dc7c3f67d965a1b4fda74f9174"
+  },
+  {
+    "file": "02_references/source_manifest.json",
+    "bytes": 2995,
+    "sha256": "fef470051fbf89f056847524a3e68041dd521ad04eb96a344099a4d1edd4df6a"
+  },
+  {
+    "file": "03_data/processed/policy_indicators.json",
+    "bytes": 1407,
+    "sha256": "3918b44da633ff1261a500a31a00729b9c0f207cc083e13b88270e03755679e1"
+  },
+  {
+    "file": "03_data/raw/hyun_2023.pdf",
+    "bytes": 609682,
+    "sha256": "dbd52a95f8b57c52b1111f10b931c9433431ce41378b4c7bacd7a912e1855515"
+  },
+  {
+    "file": "03_data/raw/korean_stress_2012.pdf",
+    "bytes": 325450,
+    "sha256": "7c92e221aa0ec9c79cac0e5495e9f367657bc4c17739636761cf8e6bc2de6022"
+  },
+  {
+    "file": "03_data/raw/mnd_evaluation.pdf",
+    "bytes": 1907023,
+    "sha256": "edb1528ddebc72dff79a5c8b5cf7ccb3f3f868b941b262db3990ffcb7cc31d51"
+  },
+  {
+    "file": "03_data/raw/pilot_2018.pdf",
+    "bytes": 7442304,
+    "sha256": "698f7c393e590fdc7ef1d09e71a4676ff67ee2b51e737c96380a56af015a8d2a"
+  },
+  {
+    "file": "03_data/raw/policy_2020.html",
+    "bytes": 168265,
+    "sha256": "a58424b7b637a2e534054952901cee2f161b313a45b30ee799e221cea67a70cf"
+  },
+  {
+    "file": "04_analysis/analysis.py",
+    "bytes": 3603,
+    "sha256": "e25a59f91a87db8753616e743e66767c32405c7a55eb9888b2fc56be33a973d8"
+  },
+  {
+    "file": "04_analysis/environment_verified_20260911.json",
+    "bytes": 401,
+    "sha256": "f1af7f784c422c96080a1a7589789f2072ca736d7dc21a92063ece5f512f0967"
+  },
+  {
+    "file": "04_analysis/README.md",
+    "bytes": 1784,
+    "sha256": "6f9f44cba426d00fe058432632e67b619ae84ac0b99f1ff1dea8a42a76e01c88"
+  },
+  {
+    "file": "04_analysis/requirements.txt",
+    "bytes": 40,
+    "sha256": "828aeb03e8d85210af7f20e8d869f45c24175728a7b9e70ba05e5bee813c8728"
+  },
+  {
+    "file": "04_analysis/verify_results.py",
+    "bytes": 743,
+    "sha256": "94a62efab39aa9dfb47c947b8a3fe7f14eb2e5f17f67ddf0e916173ed4c79648"
+  },
+  {
+    "file": "05_results/figures/policy_perceptions.png",
+    "bytes": 55035,
+    "sha256": "303f7e09b7fff5710c34a0edf916bd2260cbc668041c1c98238cc1eee68eaaf4"
+  },
+  {
+    "file": "05_results/tables/descriptive_statistics.json",
+    "bytes": 544,
+    "sha256": "42386130f50a69139d0d4cbe6a4815440ea5dae4419d40c7cb84abcc42da9baa"
+  },
+  {
+    "file": "05_results/tables/policy_indicators.md",
+    "bytes": 669,
+    "sha256": "11d2c8e1637e35e5ab0f7fe401d35092de83d2aa719c33df3aa32ea26737d7ce"
+  },
+  {
+    "file": "06_evidence/ai_and_my_judgment.md",
+    "bytes": 796,
+    "sha256": "d1a5de01b9c016d4967c6ce21a2796833bd7d801e4bac7b815cee93e2112a195"
+  },
+  {
+    "file": "06_evidence/design_changes.md",
+    "bytes": 1752,
+    "sha256": "df703a89741ba2a95d147706381bceb9e70f65a25ac90517f0b004eda83686a5"
+  },
+  {
+    "file": "06_evidence/experiment_design_v2.md",
+    "bytes": 4199,
+    "sha256": "993790b8eec28e9f3082ec323b92d4d09089bb5f3d8069db5aa061d86b06405a"
+  },
+  {
+    "file": "06_evidence/final_verification.md",
+    "bytes": 1408,
+    "sha256": "8a194cf3e6a315d4ba23273b999e5c33601bdbe500b9f2c7704607548c3663fc"
+  },
+  {
+    "file": "06_evidence/hypothesis_process.md",
+    "bytes": 5244,
+    "sha256": "16464597a2087bd8ffa1dd902d7aae37995306cbdfcfd94aac51e5536dec6914"
+  },
+  {
+    "file": "06_evidence/hyun_page_4.png",
+    "bytes": 48821,
+    "sha256": "39bf6a1eddee9e9d27e47c626aa019a0bd1636e0ecd9acb358b9661bb90c67c4"
+  },
+  {
+    "file": "06_evidence/interpretation.md",
+    "bytes": 4554,
+    "sha256": "c9b829635ad7d93ad20d86c3f35b688644d2356975d0e77eefebc6141aa2d9ce"
+  },
+  {
+    "file": "06_evidence/korean_page_16.png",
+    "bytes": 28278,
+    "sha256": "a1bf5c1c2c2ea083b874df81f232a3fcd9674fdac3f38aa62ce77086af197011"
+  },
+  {
+    "file": "06_evidence/korean_source_verification.md",
+    "bytes": 1338,
+    "sha256": "6a9fd7325e5229015e1b7300615a03b94f064b51ba21975fe95cff894aa6368c"
+  },
+  {
+    "file": "06_evidence/mnd_page_11.png",
+    "bytes": 33188,
+    "sha256": "f0d2a06f6b33600c01d6afa79090d803990618a810440b3ea32d2f17ebd670a8"
+  },
+  {
+    "file": "06_evidence/official_cards.md",
+    "bytes": 4228,
+    "sha256": "00b10e758a40b97dc8e7ac461adc5626dc8b391f83e0efead43eb2b4474983c1"
+  },
+  {
+    "file": "06_evidence/pilot_2018_verification.md",
+    "bytes": 2371,
+    "sha256": "7bcaffdf1ca747a11acaf835e19fd6ac4c2e62cad8b25e9a9fe7756b62fa209a"
+  },
+  {
+    "file": "06_evidence/raw_integrity_check.json",
+    "bytes": 546,
+    "sha256": "91b7261fab70ca53d3525288008d808213df0be3d435326bef7548bb8dddb1c6"
+  },
+  {
+    "file": "06_evidence/reproduction_test_result.json",
+    "bytes": 273,
+    "sha256": "85c7d1eb18d0e504687f17e2ae86907d75c17ea184d94890c5d6f6731722555b"
+  },
+  {
+    "file": "06_evidence/revision_1.md",
+    "bytes": 952,
+    "sha256": "bdfe3922115f56168b83b0171bc95f7d2f58d727a6a0a54ba09437cd95be6e4a"
+  },
+  {
+    "file": "06_evidence/search_log_20260911.md",
+    "bytes": 1039,
+    "sha256": "76e375a05ca1b24bf7c14ec0c738dc476ccb7ede0c1c6ec0924c8147666fb2b4"
+  },
+  {
+    "file": "06_evidence/T10_C01_C51_checklist.md",
+    "bytes": 8686,
+    "sha256": "abd79b48b92f8149a94fd1a4afa8c6033752926250dad33bd6e13dd0a75a35ff"
+  },
+  {
+    "file": "06_evidence/url_access_check.json",
+    "bytes": 2538,
+    "sha256": "7e68d37e355fc03dadf7e0ce1022b9342ae5f88f668fd7282217dd21f94d8543"
+  },
+  {
+    "file": "README.md",
+    "bytes": 1476,
+    "sha256": "6a468b8b0cb32818c17e977e76a2bffba5aa9070943cd2e9165c48e4778045ba"
+  }
+]

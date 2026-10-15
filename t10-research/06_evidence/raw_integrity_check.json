@@ -1,0 +1,27 @@
+[
+  {
+    "file": "03_data/raw/korean_stress_2012.pdf",
+    "hash_matches": true,
+    "bytes_match": true
+  },
+  {
+    "file": "03_data/raw/mnd_evaluation.pdf",
+    "hash_matches": true,
+    "bytes_match": true
+  },
+  {
+    "file": "03_data/raw/hyun_2023.pdf",
+    "hash_matches": true,
+    "bytes_match": true
+  },
+  {
+    "file": "03_data/raw/pilot_2018.pdf",
+    "hash_matches": true,
+    "bytes_match": true
+  },
+  {
+    "file": "03_data/raw/policy_2020.html",
+    "hash_matches": true,
+    "bytes_match": true
+  }
+]

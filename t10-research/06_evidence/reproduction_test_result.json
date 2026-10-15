@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-11",
+  "zip_integrity": "PASS",
+  "all_packaged_file_hashes": "PASS",
+  "analysis_from_fresh_extraction": "PASS",
+  "three_data_and_table_outputs_byte_identical": "PASS",
+  "pdfplumber": "0.11.9",
+  "matplotlib": "3.11.1",
+  "file_count": 38
+}

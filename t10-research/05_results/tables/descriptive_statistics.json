@@ -1,0 +1,19 @@
+{
+  "indicator_count": 6,
+  "aggregate_value_count": 12,
+  "respondent_count": null,
+  "source_sha256": "edb1528ddebc72dff79a5c8b5cf7ccb3f3f868b941b262db3990ffcb7cc31d51",
+  "interpretation": "Descriptive percentages of policy perceptions; not stress scores or causal effects.",
+  "2020": {
+    "mean_across_different_indicators": 92.233,
+    "median": 95.44999999999999,
+    "min": 82.3,
+    "max": 97.7
+  },
+  "2021": {
+    "mean_across_different_indicators": 93.1,
+    "median": 95.7,
+    "min": 83.7,
+    "max": 97.9
+  }
+}

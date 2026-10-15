@@ -1,0 +1,11 @@
+{
+  "date": "2026-09-11",
+  "os": "Windows",
+  "python": "3.12 (Codex bundled runtime)",
+  "pdfplumber": "0.11.9",
+  "matplotlib": "3.11.1",
+  "renderer": "LibreOffice 26.2.6.3 extracted into task workspace; canonical render_docx.py",
+  "pdf_pages": 7,
+  "analysis": "Executed successfully from original PDF; raw hashes and all 12 values verified",
+  "network_required_for_analysis": false
+}

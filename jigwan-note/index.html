@@ -60,6 +60,7 @@
     <main class="main-content">
       <div class="demo-banner" id="demoBanner" hidden><span>체험용 가상 기록이에요. 내 기록을 저장하려면 로그인해 주세요.</span><button class="text-link" type="button" data-start-login>내 기록 시작하기 →</button></div>
       <header class="topbar">
+        <button class="button button-secondary team-settings-button" id="teamSettingsButton" type="button">⚾ 응원팀 설정</button>
         <a class="mobile-brand" href="#dashboard"><span class="brand-mark" aria-hidden="true">B</span><strong>직관노트</strong></a>
         <div class="account-controls"><span id="accountEmail" class="account-email"></span><button class="button button-secondary sign-out-button" id="demoHomeButton" type="button" hidden>소개 화면</button><button class="button button-secondary sign-out-button" id="signOutButton" type="button">로그아웃</button></div>
         <button class="button button-primary top-add" type="button" data-add-record><span aria-hidden="true">＋</span> 새 기록</button>
@@ -97,6 +98,7 @@
   </nav>
 
   <dialog class="app-dialog editor-dialog" id="editorDialog" aria-labelledby="editorTitle"><div id="editorContent"></div></dialog>
+  <dialog class="app-dialog team-dialog" id="teamDialog" aria-labelledby="teamTitle"><form class="dialog-inner record-form" id="teamForm"><div class="dialog-top"><div><h2 id="teamTitle">나의 응원팀</h2><p>새 기록에 자동으로 입력해 드려요.</p></div><button class="icon-button" id="closeTeamDialog" type="button" aria-label="응원팀 설정 닫기">×</button></div><label class="form-field" for="preferredTeam"><span class="field-label">응원하는 팀</span><select id="preferredTeam" name="preferredTeam"><option value="">응원팀 미지정</option><option>LG 트윈스</option><option>두산 베어스</option><option>KT 위즈</option><option>SSG 랜더스</option><option>KIA 타이거즈</option><option>삼성 라이온즈</option><option>롯데 자이언츠</option><option>한화 이글스</option><option>NC 다이노스</option><option>키움 히어로즈</option></select></label><p class="form-hint" id="teamSettingsHint">계정에 저장되며, 기존 경기 기록의 응원팀은 바뀌지 않아요.</p><p class="form-error" id="teamSettingsError" role="alert" hidden></p><div class="form-actions"><button class="button button-primary" id="saveTeamButton" type="submit">응원팀 저장</button></div></form></dialog>
   <dialog class="app-dialog detail-dialog" id="detailDialog" aria-label="직관 기록 상세"><div id="detailContent"></div></dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>

@@ -13,6 +13,13 @@
   const memory = new Map();
   const welcome=document.getElementById('welcomePage'),mobileNav=document.getElementById('mobileNav');
   window.JIGWAN_DEMO=false;
+  window.JIGWAN_FAVORITE_TEAM='';
+  const teamDialog=document.getElementById('teamDialog'),teamSelect=document.getElementById('preferredTeam'),teamButton=document.getElementById('teamSettingsButton');
+  function setFavoriteTeam(value){window.JIGWAN_FAVORITE_TEAM=typeof value==='string'?value.slice(0,40):'';teamButton.textContent=window.JIGWAN_FAVORITE_TEAM?`⚾ ${window.JIGWAN_FAVORITE_TEAM}`:'⚾ 응원팀 설정';}
+  teamButton.addEventListener('click',()=>{teamSelect.value=window.JIGWAN_FAVORITE_TEAM;document.getElementById('teamSettingsError').hidden=true;document.getElementById('teamSettingsHint').textContent=window.JIGWAN_DEMO?'샘플 체험 중에만 적용돼요. 계정에 저장하려면 로그인해 주세요.':'계정에 저장되며, 기존 경기 기록의 응원팀은 바뀌지 않아요.';teamDialog.showModal();});
+  document.getElementById('closeTeamDialog').addEventListener('click',()=>teamDialog.close());
+  teamDialog.addEventListener('click',event=>{if(event.target===teamDialog)teamDialog.close();});
+  document.getElementById('teamForm').addEventListener('submit',async event=>{event.preventDefault();const value=teamSelect.value,button=document.getElementById('saveTeamButton'),errorBox=document.getElementById('teamSettingsError');errorBox.hidden=true;if(window.JIGWAN_DEMO){setFavoriteTeam(value);teamDialog.close();return;}if(!user){teamDialog.close();requestLogin();return;}const ownerId=user.id;button.disabled=true;try{const{data,error}=await client.auth.updateUser({data:{jigwan_favorite_team:value}});if(error)throw error;if(user?.id!==ownerId)return;user=data.user;setFavoriteTeam(user.user_metadata?.jigwan_favorite_team);teamDialog.close();const toast=document.getElementById('toast');toast.textContent=value?'응원팀을 저장했어요. 다음 새 기록부터 자동으로 입력돼요.':'응원팀 설정을 해제했어요.';toast.classList.add('is-visible');setTimeout(()=>toast.classList.remove('is-visible'),4000);}catch(error){errorBox.textContent='응원팀을 저장하지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요.';errorBox.hidden=false;}finally{button.disabled=false;}});
   const sampleRecords=[
     {id:'sample-1',gameDate:'2026-09-20',stadium:'잠실야구장',favoriteTeam:'LG 트윈스',opponentTeam:'두산 베어스',favoriteScore:5,opponentScore:3,result:'win',seat:'1루 블루석',review:'마지막 아웃까지 함께 외쳤던 하루. 다음 직관도 꼭 기록해야지!',photos:[],createdAt:'2026-09-20T12:00:00Z'},
     {id:'sample-2',gameDate:'2026-09-12',stadium:'고척스카이돔',favoriteTeam:'LG 트윈스',opponentTeam:'키움 히어로즈',favoriteScore:2,opponentScore:4,result:'loss',seat:'3루 내야석',review:'결과는 아쉬웠지만 친구와 함께한 응원은 최고였다.',photos:[],createdAt:'2026-09-12T12:00:00Z'},
@@ -22,12 +29,12 @@
   let writeQueue=Promise.resolve(), refreshQueue=Promise.resolve();
 
   function showMessage(text,isError=false){authMessage.textContent=text;authMessage.classList.toggle('is-error',isError);authMessage.hidden=!text;}
-  function closeDialogs(){document.getElementById('editorDialog').close();document.getElementById('detailDialog').close();}
+  function closeDialogs(){document.getElementById('editorDialog').close();document.getElementById('detailDialog').close();teamDialog.close();}
   function showWelcome(){closeDialogs();welcome.hidden=false;gate.hidden=true;appShell.hidden=true;mobileNav.hidden=true;window.JIGWAN_DEMO=false;memory.delete(KEY);document.dispatchEvent(new CustomEvent('jigwan-records-loaded',{detail:[]}));}
   function showGate(text,isError=false){closeDialogs();welcome.hidden=true;gate.hidden=false;appShell.hidden=true;mobileNav.hidden=true;showMessage(text,isError);}
   function enterApp(){welcome.hidden=true;gate.hidden=true;appShell.hidden=false;mobileNav.hidden=false;document.getElementById('demoBanner').hidden=!window.JIGWAN_DEMO;document.getElementById('demoHomeButton').hidden=!window.JIGWAN_DEMO;document.getElementById('signOutButton').hidden=window.JIGWAN_DEMO;document.getElementById('accountEmail').textContent=window.JIGWAN_DEMO?'샘플 체험':user.email||'내 계정';}
   function startRuntime(records){memory.set(KEY,JSON.stringify(records));if(!runtimeStarted){runtimeStarted=true;const script=document.createElement('script');script.src='app.js';script.onload=()=>document.dispatchEvent(new CustomEvent('jigwan-records-loaded',{detail:JSON.parse(memory.get(KEY)||'[]')}));script.onerror=()=>{runtimeStarted=false;showGate('화면을 불러오지 못했어요. 새로고침 후 다시 시도해 주세요.',true);};document.body.appendChild(script);}else document.dispatchEvent(new CustomEvent('jigwan-records-loaded',{detail:records}));}
-  document.getElementById('startDemoButton').addEventListener('click',()=>{if(user){window.JIGWAN_DEMO=false;enterApp();return;}window.JIGWAN_DEMO=true;enterApp();startRuntime(sampleRecords.map(r=>({...r,photos:[]})));});
+  document.getElementById('startDemoButton').addEventListener('click',()=>{if(user){window.JIGWAN_DEMO=false;enterApp();return;}window.JIGWAN_DEMO=true;setFavoriteTeam('LG 트윈스');enterApp();startRuntime(sampleRecords.map(r=>({...r,photos:[]})));});
   function requestLogin(){window.JIGWAN_DEMO=false;memory.delete(KEY);showGate('기록과 사진을 안전하게 보관하려면 로그인해 주세요. 기존 plan-do-see 계정도 사용할 수 있어요.');}
   document.addEventListener('click',event=>{if(event.target.closest('[data-start-login]'))requestLogin();});
   document.addEventListener('jigwan-request-login',requestLogin);
@@ -57,7 +64,7 @@
       const photoUrls=await Promise.all(photos.map(async photo=>{const{data,error:urlError}=await client.storage.from(BUCKET).createSignedUrl(photo.path,3600);if(urlError)throw urlError;return{...photo,src:data.signedUrl,urlExpiresAt:Date.now()+3600000};}));saved.push({...record,photos:photoUrls});}
     for(const[id,previous]of existing){if(incomingIds.has(id))continue;const{error}=await client.schema('jigwan').from('jigwan_watch_records').delete().eq('id',id);if(error)throw error;const paths=(previous.photos||[]).map(photo=>photo.path).filter(Boolean);if(paths.length){const{error:removeError}=await client.storage.from(BUCKET).remove(paths);if(removeError)throw removeError;}}
     if(thisMutation===mutation)memory.set(KEY,JSON.stringify(saved));}
-  async function startSession(session){const sessionUser=session?.user;if(!sessionUser){user=null;return;}user=sessionUser;try{const records=await loadRecords();if(user?.id!==sessionUser.id)return;window.JIGWAN_DEMO=false;enterApp();startRuntime(records);}catch(error){if(user?.id===sessionUser.id){user=null;showGate('로그인은 완료됐지만 기록을 불러오지 못했어요. 잠시 후 다시 로그인해 주세요.',true);console.error('직관 기록 조회 실패:',error);}}}
+  async function startSession(session){const sessionUser=session?.user;if(!sessionUser){user=null;return;}user=sessionUser;setFavoriteTeam(sessionUser.user_metadata?.jigwan_favorite_team);try{const records=await loadRecords();if(user?.id!==sessionUser.id)return;window.JIGWAN_DEMO=false;enterApp();startRuntime(records);}catch(error){if(user?.id===sessionUser.id){user=null;showGate('로그인은 완료됐지만 기록을 불러오지 못했어요. 잠시 후 다시 로그인해 주세요.',true);console.error('직관 기록 조회 실패:',error);}}}
 
   // 직관 기록은 메모리에만 저장하고, 레코드는 Supabase DB에 저장합니다.
   Object.defineProperty(window,'localStorage',{configurable:true,value:{
@@ -74,6 +81,6 @@
   async function refresh(){const records=await loadRecords();document.dispatchEvent(new CustomEvent('jigwan-records-loaded',{detail:records}));}
   for(const name of ['jigwan-refresh-records','jigwan-photo-urls-expired'])document.addEventListener(name,()=>{refreshQueue=refreshQueue.then(refresh).catch(error=>document.dispatchEvent(new CustomEvent('jigwan-cloud-error',{detail:errorText(error)})));});
   document.addEventListener('jigwan-cloud-error',event=>{const toast=document.getElementById('toast');toast.textContent=`서버 저장에 실패했습니다: ${event.detail}`;toast.classList.add('is-visible');setTimeout(()=>toast.classList.remove('is-visible'),5000);});
-  client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){user=null;lastUserId=null;memory.delete(KEY);document.dispatchEvent(new CustomEvent('jigwan-records-loaded',{detail:[]}));document.getElementById('editorDialog').close();document.getElementById('detailDialog').close();showGate('로그아웃했습니다. 다시 로그인해 기록을 확인하세요.');}else if(event==='SIGNED_IN'&&session?.user&&lastUserId!==session.user.id){lastUserId=session.user.id;setTimeout(()=>startSession(session),0);}});
+  client.auth.onAuthStateChange((event,session)=>{if(event==='USER_UPDATED'&&session?.user?.id===user?.id){user=session.user;setFavoriteTeam(user.user_metadata?.jigwan_favorite_team);}else if(event==='SIGNED_OUT'){setFavoriteTeam('');teamDialog.close();user=null;lastUserId=null;memory.delete(KEY);document.dispatchEvent(new CustomEvent('jigwan-records-loaded',{detail:[]}));document.getElementById('editorDialog').close();document.getElementById('detailDialog').close();showGate('로그아웃했습니다. 다시 로그인해 기록을 확인하세요.');}else if(event==='SIGNED_IN'&&session?.user&&lastUserId!==session.user.id){lastUserId=session.user.id;setTimeout(()=>startSession(session),0);}});
   client.auth.getSession().then(({data,error})=>{if(error)return showGate(`인증 상태를 확인하지 못했습니다: ${errorText(error)}`,true);if(data.session?.user)lastUserId=data.session.user.id;startSession(data.session);});
 })();

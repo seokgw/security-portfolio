@@ -30,4 +30,15 @@ GitHub/Vercel 배포 설정은 [DEPLOYMENT.md](DEPLOYMENT.md)를 확인하세요
 
 ## 서비스 시작 전 확인
 
-계정 가입/이메일 인증 설정, 비밀번호 복구, 계정 삭제 정책, 개인정보 안내, 백업·보존, 배포 도메인, Storage 및 DB의 RLS를 프로젝트 운영자가 설정해야 합니다. 실제 프로젝트 생성, 설정값 입력, SQL 실행, 브라우저/모바일 CRUD 테스트 및 배포는 여기서 수행하지 않았습니다. 설정을 마치기 전 앱은 연결된 실서비스가 아닙니다.
+2026-10-19 기준 [공개 서비스](https://jigwan-note.vercel.app/)의 Supabase 연결과 Vercel 배포를 완료했습니다. 기존 plan-do-see 데이터는 보존하고 `jigwan.jigwan_watch_records`와 비공개 사진 bucket을 분리해 사용합니다.
+
+- 소개 화면 → 로그인 없는 샘플 체험 → 개인 계정 저장 흐름
+- 구장 선택 목록과 기타 직접 입력
+- 계정별 응원팀 저장 및 새 기록 자동 입력
+- 실제 계정의 재로그인 유지·CRUD·사진·신규 가입 메일 수신과 인증 검증 완료
+- 모바일 검증은 390×844 뷰포트 기준이며 실물 기기 검증은 별도
+- 비밀번호 복구, 계정 삭제 정책, 개인정보 안내와 백업·보존 정책은 추가 보완 대상
+
+[포트폴리오 사례](PORTFOLIO.md) · [검증 결과와 제한](documents/verification-2026-10-19.md) · [발표 자료](documents/jigwan-note-final-presentation.pptx) · [제출 입력 문구](documents/final-submission.txt) · [발표 대본](documents/presentation-script.txt)
+
+샘플 체험의 기록은 메모리에서만 처리하며 Supabase에 쓰지 않습니다. 기술 테스트는 사용자 요청에 따라 AI가 수행했으며, 개선 후 친구의 재사용 평가는 아직 받지 않았습니다.

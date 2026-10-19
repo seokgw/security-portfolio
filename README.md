@@ -55,3 +55,12 @@ python -m http.server 8000
 ## 개인정보 및 비밀정보
 
 전화번호, 주소, 개인 이메일, 회사 내부 정보, 고객 데이터, 자격 증명과 비밀값을 포함하지 않았습니다.
+
+## 나의 웹 프로젝트 · 직관노트
+
+친구의 피드백을 소개·샘플 체험과 구장 선택에 반영한 야구 직관 기록 앱입니다. 개인 기록·사진·통계, 계정별 응원팀 설정을 제공하며 실제 계정 테스트와 신규 가입 인증 메일 수신을 확인했습니다. 구현과 테스트는 AI가 수행했고 사용자는 기능·공개 범위·기존 데이터 보존 방향을 결정했습니다.
+
+- [공개 서비스](https://jigwan-note.vercel.app/)
+- [구현·역할·검증과 다음 과제](jigwan-note/PORTFOLIO.md)
+- [최종 발표 PPTX](jigwan-note/documents/jigwan-note-final-presentation.pptx)
+- [Notion 과제 관리](https://www.notion.so/3fe6b4cbb4b28114ae28d50a206257e4)

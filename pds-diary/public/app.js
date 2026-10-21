@@ -2,7 +2,7 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const state={plans:[],plan:null,tasks:[],logs:[],review:null,reflections:[]};
 const emptyStore=()=>({plans:[],tasks:[],logs:[],reflections:[],daily_records:[],rule_changes:[],plan_history:[],completion_events:[]});
 let supabase,user,store;
-const clientReady=(async()=>{const c=window.PDS_CONFIG;if(!c?.url||!c?.publishableKey)throw new Error('Supabase 공개 설정이 없습니다.');const {createClient}=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/+esm');supabase=createClient(c.url,c.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})})();
+const clientReady=(async()=>{const c=window.PDS_CONFIG;if(!c?.url||!c?.publishableKey)throw new Error('Supabase 공개 설정이 없습니다.');const {createClient}=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/+esm');supabase=createClient(c.url,c.publishableKey,{db:{schema:'pds'},auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})})();
 const fail=(message,status=400)=>{const error=new Error(message);error.status=status;throw error};
 const nextId=rows=>Math.max(0,...rows.map(x=>Number(x.id||x.history_id)||0))+1;
 async function currentUser(){await clientReady;const {data:{user:u},error}=await supabase.auth.getUser();if(error||!u)fail('로그인이 필요합니다.',401);user=u;return u}

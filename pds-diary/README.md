@@ -4,7 +4,7 @@
 
 - 화면: GitHub Pages (`pds-diary/public/`)
 - 인증·저장: Supabase Auth + PostgreSQL
-- 접근 제어: `pds_user_data` 테이블의 RLS 정책으로 본인 행만 조회·저장
+- 접근 제어: `pds.pds_user_data` 테이블의 RLS 정책으로 본인 행만 조회·저장
 - 공개 브라우저 설정: `public/config.js`의 publishable key만 사용
 - 관리용 키와 DB 비밀번호는 공개 코드에 포함하지 않음
 
@@ -76,3 +76,7 @@ Plan 수정 이력, 실제 Task 5개 이상, 실행 기록 3개 이상, 클릭 �
 ① AI에게 맡긴 일 — MariaDB 테이블 구조, Node.js API, 화면, 중복 완료 방지와 테스트 코드 작성을 맡겼습니다.  
 ② 내가 직접 판단한 일 — 실제 MCP 서버 구축 Plan, Task, 예상 시간, 실행 기록과 개선점을 판단했습니다.  
 ③ AI 제안을 따르지 않은 일 — 일반 예시 대신 실제 진행하는 MCP 서버 구축 과정을 기록했습니다.
+
+## 2026-10-21 데이터 연결 복구
+
+기존 관계형 테이블은 보존하고 확인된 소유자의 기록만 계정별 JSON 저장소에 복사했습니다. Data API는 기존 vault_api·jigwan 설정을 보존하고 pds를 추가했습니다. 클라이언트는 pds 스키마를 명시하며, 인증 사용자는 RLS로 본인 행만 조회·저장합니다.

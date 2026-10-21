@@ -99,4 +99,4 @@ $('#passwordForm').onsubmit=async e=>{e.preventDefault();try{await api('/api/aut
 $('#dailyForm').onsubmit=async e=>{e.preventDefault();try{await api('/api/daily-records',{method:'POST',body:JSON.stringify(body(e.target))});e.target.reset();await loadDaily();toast('실제 날짜 기록을 저장했습니다.')}catch(x){toast(x.message)}};
 $('#ruleForm').onsubmit=async e=>{e.preventDefault();try{await api('/api/rule-changes',{method:'POST',body:JSON.stringify(body(e.target))});e.target.reset();toast('계획 규칙 변경을 한 번 저장했습니다.')}catch(x){toast(x.message)}};
 window.addEventListener('unhandledrejection',e=>{if(e.reason?.status===401)e.preventDefault()});
-(async()=>{try{const x=await api('/api/auth/me');await showApp(x.user,true)}catch(e){showAuth()}})();
+(async()=>{try{const x=await api('/api/auth/me');await showApp(x.user,true)}catch(e){showAuth(e.status===401?'':`기록을 불러오지 못했습니다: ${e.message}`)}})();
